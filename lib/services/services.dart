@@ -87,8 +87,8 @@ print(response.statusCode);print(response.body);
   switch (response.statusCode) {
     case 200 :
       final String responsestring  = response.body;
-      JsonUser result = jsonUserFromJson(responsestring);
-      _registerUser = User(result.user.firstname,result.user.surname,result.user.email,result.user.email,result.user.tel);
+     // JsonUser result = jsonUserFromJson(responsestring);
+     //_registerUser = User(result.user.firstname,result.user.surname,result.user.email,result.user.email,result.user.tel);
       List<UserBdd> users = await DataBase.instance.user();
       _searchUser(users,user);
       return ResponseSend(true, 'connected');
@@ -122,7 +122,7 @@ print(response.statusCode);print(response.body);
     case 201 :
       final String responsestring  = response.body;
       _registerUser = user;
-      JsonUser result = jsonUserFromJson(responsestring);
+      //  JsonUser result = jsonUserFromJson(responsestring);
       List<UserBdd> users = await DataBase.instance.user();
       _searchUser(users,UserBdd(user.password, user.email));
       return ResponseSend(true, 'connected');
