@@ -117,8 +117,9 @@ var response =  await http.post(
         "password": user.password,
         "fromApi": true.toString()
       } );
+print(response.statusCode);print(response.body);
   switch (response.statusCode) {
-    case 200 :
+    case 201 :
       final String responsestring  = response.body;
       _registerUser = user;
       JsonUser result = jsonUserFromJson(responsestring);

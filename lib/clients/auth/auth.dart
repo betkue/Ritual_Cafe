@@ -86,7 +86,7 @@ class _AuthFullState extends State<AuthFull> {
         backgroundColor: Colors.black,
         body: servs.send ? Loadding(): ListView(
           children: [
-            SizedBox(height: 20,),
+            SizedBox(height: 15,),
             Text( "Ritual Café",//"Ritual Café"
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -94,15 +94,14 @@ class _AuthFullState extends State<AuthFull> {
               fontWeight: FontWeight.bold,
               fontSize: 38
             ),),
-            SizedBox(height: 25,),
-            Text(servs.login?"Connexion"  :"Inscription",
+            Text(servs.login?"Connexion":"Inscription",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 30
-            )),
-            SizedBox(height: 15,),
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30
+                )),
+            SizedBox(height: 8,),
           Padding(
             padding: const EdgeInsets.all(30),
             child: Container(
@@ -119,10 +118,7 @@ class _AuthFullState extends State<AuthFull> {
                   ))),
             ),
           ),
-            Padding(padding: EdgeInsets.all(30),
-             child: Text(error,style: TextStyle(color: Colors.red),)
-            ),
-            Padding(padding: EdgeInsets.all(30),
+            Padding(padding: EdgeInsets.only(left: 30,right: 30,top: 10),
             child:
             GestureDetector(
               onTap: (){change(servs); },
@@ -149,7 +145,7 @@ class _AuthFullState extends State<AuthFull> {
     ) ;
   }
   //formulaire de connexion
-  List<Widget>  Login(Services servs){
+  List<Widget>  Register(Services servs){
     double width = MediaQuery .of(context).size.width;
     return [
       Padding(
@@ -166,10 +162,10 @@ class _AuthFullState extends State<AuthFull> {
           cursorColor: Colors.black,
           keyboardType: TextInputType.text,
           controller: nomController,
-          decoration:textInputDecoration.copyWith(hintText: 'Nom-Prenom'),
+          decoration:textInputDecoration.copyWith(hintText: 'Nom Prenom'),
           validator: (value) {
             if (!re.hasMatch(value)) {
-              return 'Entrez sus la forme Nom Prenom  ';
+              return 'Entrez sus la forme "Nom Prenom"  ';
             }
             return null;
           },
@@ -209,10 +205,12 @@ class _AuthFullState extends State<AuthFull> {
         padding: const EdgeInsets.only(
             top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
         child: TextFormField(
+          maxLength: 9,
           inputFormatters: [
             FilteringTextInputFormatter.allow(
                 RegExp('[0-9]+'))
           ],
+
           cursorColor: Colors.black,
           keyboardType: TextInputType.phone,
           controller: phoneController,
@@ -255,7 +253,7 @@ class _AuthFullState extends State<AuthFull> {
           style: TextStyle(color: Colors.red,
           ),),
       ),
-      SizedBox(height: 30,),
+      SizedBox(height: 10,),
       GestureDetector(
         onTap:() async{
           if (formKey.currentState.validate()) {
@@ -306,10 +304,9 @@ class _AuthFullState extends State<AuthFull> {
     ];
   }
   //formulaire d'inscription
-  List<Widget>  Register(Services servs){
+  List<Widget>  Login(Services servs){
     double width = MediaQuery .of(context).size.width;
     return [
-
 
       Padding(
         padding: const EdgeInsets.only(left: 16),
@@ -389,10 +386,8 @@ class _AuthFullState extends State<AuthFull> {
               setState(() {
                 error =result.message;
               });
-              Navigator.of(context).pushNamed('/');
 
-                              snack(result.message,
-                                  Icon(Icons.details, color: Colors.red,));
+                snack(result.message, Icon(Icons.details, color: Colors.red,));
 
             }
 
