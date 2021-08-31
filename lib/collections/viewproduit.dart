@@ -28,6 +28,7 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
   @override
   Widget build(BuildContext context) {
    var produit = widget.serv.collections.data[widget.serv.indexCollection].produits[widget.serv.indexProduit] ;
+
     double width = MediaQuery .of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.black,
@@ -53,7 +54,7 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                     left: 10,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.black,
+                        color: Colors.black45,
                         borderRadius: BorderRadius.all(Radius.circular(10.0),
                         ),
                       ),
@@ -106,15 +107,40 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
             Text('Description',
               style: TextStyle(color: Colors.grey,fontSize: 15),),
             SizedBox(height: 15,),
-            Text(produit.description,
-                maxLines: 2,
-                style: TextStyle(color: Colors.white),),
+            produit.description !=null?
+            Column(
+              children: [
+                Text(produit.description.split('>')[1].split(';')[0],
+                  maxLines: 2,
+                  style: TextStyle(color: Colors.white),),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: produit.description.split('>')[1].split(';').length >1?
+                  Row(
+                    children: [
+                      Container(
+                        child: Text(produit.description.split('>')[1].split(';')[1],
+                          maxLines: 1,
+                          style: TextStyle(color: Colors.white),),
+                        width: width-150,
+                      ),
+                      Container( width:70,
+                          child: Text('... lire plus',style: TextStyle(color: Colors.orange),))
+                      ,
+                    ],
+                  ): Container(width: 0,height: 0,),
+                )
+              ],
+            )
+                :
+            Container(width: 0,height: 0,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children:[
                 SizedBox(height: 20,),
                 Text("Taille",
                   style: TextStyle(color: Colors.grey,fontSize: 15),),
+
                 Theme(
                     data: ThemeData(
                         unselectedWidgetColor: Colors.white,
