@@ -90,7 +90,7 @@ class _AuthFullState extends State<AuthFull> {
             Text( "Ritual Café",//"Ritual Café"
               textAlign: TextAlign.center,
               style: TextStyle(
-              color: Colors.orange,
+              color: Color.fromRGBO(202, 115, 64, 1),
               fontWeight: FontWeight.bold,
               fontSize: 38
             ),),
@@ -120,12 +120,12 @@ class _AuthFullState extends State<AuthFull> {
           ),
             Padding(padding: EdgeInsets.only(left: 30,right: 30,top: 10),
             child:
-            GestureDetector(
+             GestureDetector(
               onTap: (){change(servs); },
               child: Container(
                 width: width,
                 decoration: BoxDecoration(
-                  color: Colors.grey,
+                  color: Color.fromRGBO(44, 51,61, 1),
                   borderRadius: BorderRadius.circular(15),
 
                 ),
@@ -151,12 +151,12 @@ class _AuthFullState extends State<AuthFull> {
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text("Prénom & Nom",textAlign: TextAlign.start,
-          style: TextStyle(color: Colors.white,fontSize: 20,
+          style: TextStyle(color: Colors.white,fontSize: 15,
           ),),
       ),
       Padding(
         padding: const EdgeInsets.only(
-            top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
+            top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
         child:
         TextFormField(
           cursorColor: Colors.black,
@@ -175,12 +175,12 @@ class _AuthFullState extends State<AuthFull> {
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text("Email",textAlign: TextAlign.start,
-          style: TextStyle(color: Colors.white,fontSize: 20,
+          style: TextStyle(color: Colors.white,fontSize: 15,
           ),),
       ),
       Padding(
         padding: const EdgeInsets.only(
-            top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
+            top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
         child: TextFormField(
           cursorColor: Colors.black,
           keyboardType: TextInputType.emailAddress,
@@ -198,41 +198,43 @@ class _AuthFullState extends State<AuthFull> {
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text("Numéro de tel",textAlign: TextAlign.start,
-          style: TextStyle(color: Colors.white,fontSize: 20,
+          style: TextStyle(color: Colors.white,fontSize: 15,
           ),),
       ),
       Padding(
         padding: const EdgeInsets.only(
-            top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
-        child: TextFormField(
-          maxLength: 9,
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(
-                RegExp('[0-9]+'))
-          ],
+            top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
 
-          cursorColor: Colors.black,
-          keyboardType: TextInputType.phone,
-          controller: phoneController,
-          decoration:textInputDecoration.copyWith(hintText: 'Numero de télephone'),
-          validator: (value) {
-            if (value.length!=9) {
-              return 'Le numero doit avoir 9 chiffres';
-            }
-            return null;
-          },
-        ),
+              child: TextFormField(
+                maxLength: 9,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp('[0-9]+'))
+                ],
+
+                cursorColor: Colors.black,
+                keyboardType: TextInputType.phone,
+                controller: phoneController,
+                decoration:textInputDecoration.copyWith(hintText: 'Numero de télephone'),
+                validator: (value) {
+                  if (value.length!=9) {
+                    return 'Le numero doit avoir 9 chiffres';
+                  }
+                  return null;
+                },
+              ),
+
       ),
 
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text("Mot de passe",textAlign: TextAlign.start,
-          style: TextStyle(color: Colors.white,fontSize: 20,
+          style: TextStyle(color: Colors.white,fontSize: 15,
           ),),
       ),
       Padding(
         padding: const EdgeInsets.only(
-            top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
+            top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
         child: TextFormField(
           cursorColor: Colors.black,
           controller: passController,
@@ -246,7 +248,7 @@ class _AuthFullState extends State<AuthFull> {
           },
         ),
       ),
-      SizedBox(height: 10,),
+
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text(error,textAlign: TextAlign.center,
@@ -287,7 +289,7 @@ class _AuthFullState extends State<AuthFull> {
         child:Container(
           width: width,
           decoration: BoxDecoration(
-            color: Colors.orange,
+            color: Color.fromRGBO(202, 115, 64, 1),
             borderRadius: BorderRadius.circular(15),
 
           ),
@@ -311,7 +313,7 @@ class _AuthFullState extends State<AuthFull> {
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text("Email",textAlign: TextAlign.start,
-          style: TextStyle(color: Colors.white,fontSize: 20,
+          style: TextStyle(color: Colors.white,fontSize: 15,
           ),),
       ),
       Padding(
@@ -334,7 +336,7 @@ class _AuthFullState extends State<AuthFull> {
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text("Mot de passe",textAlign: TextAlign.start,
-          style: TextStyle(color: Colors.white,fontSize: 20,
+          style: TextStyle(color: Colors.white,fontSize: 15,
           ),),
       ),
       Padding(

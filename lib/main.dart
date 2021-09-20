@@ -21,8 +21,9 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       theme: ThemeData(
         fontFamily: 'Poppins',
-        backgroundColor: Colors.black,
-        primaryColor: Colors.black
+        primaryColor: Color.fromRGBO(202, 115, 64, 1),
+        secondaryHeaderColor: Color.fromRGBO(44, 51,61, 1),
+        backgroundColor:Color.fromRGBO(12, 15, 20, 1),
       ),
       debugShowCheckedModeBanner: false,
       home: MyHomePage(),
