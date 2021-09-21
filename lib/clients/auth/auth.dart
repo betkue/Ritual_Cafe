@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:ritual_cafe/models/response.dart';
 import 'package:ritual_cafe/models/user.dart';
 import 'package:ritual_cafe/services/services.dart';
@@ -52,6 +53,7 @@ class _AuthFullState extends State<AuthFull> {
   final passController = TextEditingController();//password
   bool noView = true;//afficher mot de passe
   String error = "";//en cas d'erreur
+  String code = "+237";
   RegExp regExp =    new RegExp(r"^[a-zA-Z0-9._\-*ù^&éè#!§]+@[a-z0-9._-]+\.[a-z]{2,6}");//verification du mail
   RegExp re = new RegExp(r"^[a-zA-Z]+\s[a-zA-Z]+$");//regex nom prenom
   void change(Services serv)
@@ -63,6 +65,7 @@ class _AuthFullState extends State<AuthFull> {
 
     serv.login  = !serv.login;
   }
+
   showPass()
   {
     setState(() {
@@ -162,6 +165,10 @@ class _AuthFullState extends State<AuthFull> {
           cursorColor: Colors.black,
           keyboardType: TextInputType.text,
           controller: nomController,
+          style:TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold
+          ),
           decoration:textInputDecoration.copyWith(hintText: 'Nom Prenom'),
           validator: (value) {
             if (!re.hasMatch(value)) {
@@ -185,6 +192,10 @@ class _AuthFullState extends State<AuthFull> {
           cursorColor: Colors.black,
           keyboardType: TextInputType.emailAddress,
           controller: mailController,
+          style:TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold
+          ),
           decoration:textInputDecoration.copyWith(hintText: 'Adresse mail'),
           validator: (value) {
             if (!regExp.hasMatch(value.toString())) {
@@ -194,38 +205,48 @@ class _AuthFullState extends State<AuthFull> {
           },
         ),
       ),
-
       Padding(
-        padding: const EdgeInsets.only(left: 16),
+        padding: const EdgeInsets.only(left: 16,bottom: 4),
         child: Text("Numéro de tel",textAlign: TextAlign.start,
           style: TextStyle(color: Colors.white,fontSize: 15,
           ),),
       ),
       Padding(
+        padding: const EdgeInsets.only(left: 16,right: 16),
+        child: IntlPhoneField(
+          initialCountryCode: 'CM',
+          dropDownIcon: Icon(Icons.arrow_right,color: Colors.white,),
+          countryCodeTextColor: Colors.white,
+          inputFormatters:  [
+
+            FilteringTextInputFormatter.allow(
+                RegExp('[0-9]'))
+            ],
+          style:TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold
+          ),
+          decoration: textInputDecoration.copyWith(hintText: 'Phone',hintStyle: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold
+              )),
+          onChanged: (phone) {
+            phoneController.text = phone.completeNumber.toString();
+            print(phoneController.text);
+          },
+          onCountryChanged: (phone) {
+            phoneController.text = phone.completeNumber.toString();
+            print(phoneController.text);
+          },
+        ),
+      ),
+      Padding(
         padding: const EdgeInsets.only(
-            top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
+            top: 5.0,  right: 16.0,left: 16, bottom: 8.0),
 
-              child: TextFormField(
-                maxLength: 9,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(
-                      RegExp('[0-9]+'))
-                ],
-
-                cursorColor: Colors.black,
-                keyboardType: TextInputType.phone,
-                controller: phoneController,
-                decoration:textInputDecoration.copyWith(hintText: 'Numero de télephone'),
-                validator: (value) {
-                  if (value.length!=9) {
-                    return 'Le numero doit avoir 9 chiffres';
-                  }
-                  return null;
-                },
-              ),
+        child:Container(),
 
       ),
-
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text("Mot de passe",textAlign: TextAlign.start,
@@ -239,6 +260,10 @@ class _AuthFullState extends State<AuthFull> {
           cursorColor: Colors.black,
           controller: passController,
           obscureText: noView,
+          style:TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold
+          ),
           decoration:textInputDecoration.copyWith(hintText: 'Mot de passe'),
           validator: (value) {
             if (value.isEmpty) {
@@ -323,6 +348,10 @@ class _AuthFullState extends State<AuthFull> {
           cursorColor: Colors.black,
           keyboardType: TextInputType.emailAddress,
           controller: mailController,
+          style:TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold
+          ),
           decoration:textInputDecoration.copyWith(hintText: 'Adresse mail'),
           validator: (value) {
             if (value.isEmpty) {
@@ -346,6 +375,10 @@ class _AuthFullState extends State<AuthFull> {
           cursorColor: Colors.black,
           controller: passController,
           obscureText: noView,
+          style:TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold
+          ),
           decoration:textInputDecoration.copyWith(hintText: 'Mot de passe'),
           validator: (value) {
             if (value.isEmpty) {
@@ -401,7 +434,7 @@ class _AuthFullState extends State<AuthFull> {
         child: Container(
           width: width,
           decoration: BoxDecoration(
-            color: Colors.orange,
+            color: Color.fromRGBO(202, 115, 64, 1),
             borderRadius: BorderRadius.circular(15),
 
           ),
@@ -414,5 +447,21 @@ class _AuthFullState extends State<AuthFull> {
       ),
     ];
   }
+
 }
 
+/*CountryCodePicker(
+                  textStyle: TextStyle(color: Colors.white),
+                  onChanged: _telChange,
+                  // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
+                  initialSelection: 'CM',
+                  favorite: ['+237','CM'],
+                  // optional. Shows only country name and flag
+                  showCountryOnly: false,
+                  // optional. Shows only country name and flag when popup is closed.
+                  showOnlyCountryWhenClosed:false,
+                  // optional. aligns the flag and the Text left
+                  alignLeft: true,
+                  hideMainText: false,
+                  showFlag:false ,
+                )*/

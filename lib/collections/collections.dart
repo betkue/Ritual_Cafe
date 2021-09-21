@@ -59,6 +59,7 @@ class _CollectionFullState extends State<CollectionFull> {
             return   Scaffold(
                   backgroundColor: Colors.black,
                   appBar: AppBar(
+                    backgroundColor: Colors.black,
                     centerTitle: true,
                     title:Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,7 +69,7 @@ class _CollectionFullState extends State<CollectionFull> {
                             padding: const EdgeInsets.all(8.0), child:
                             Text( "Ritual Café",
                           style: TextStyle(
-                              color: Colors.orange,
+                              color: Color.fromRGBO(202, 115, 64, 1),
                               fontWeight: FontWeight.bold,
                               fontSize: 36
                           ),)),
@@ -105,7 +106,7 @@ class _CollectionFullState extends State<CollectionFull> {
                     top: 16.0, left: 30.0, right: 30.0, bottom: 8.0),
                     child: TextFormField(
                       textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 11.0),
+                      style: TextStyle(fontSize: 11.0,color: Colors.white,fontStyle: FontStyle.italic),
                       cursorColor: Colors.white,
                       controller: rechercheController,
                       decoration: InputDecoration(
@@ -113,6 +114,10 @@ class _CollectionFullState extends State<CollectionFull> {
                           filled: true,
                           border: OutlineInputBorder(borderRadius:
                             BorderRadius.all(Radius.circular(10.0))),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(color: Colors.grey,width: 1),
+                          ),
                           contentPadding: new EdgeInsets.symmetric(vertical: 0.0),
                           prefixIcon: Padding(
                             padding: EdgeInsets.all(0.0),
@@ -197,7 +202,16 @@ class _CollectionFullState extends State<CollectionFull> {
                                      Text('En savoir plus',
                                      style: TextStyle(color: Colors.white),
                                      ),
-                                     Icon(Icons.trending_flat,color: Colors.orange,size: 20,)
+                                     GestureDetector(
+                                       onTap:(){
+                                         servs.indexProduit = 0;
+                                         Navigator.pushNamed(context,
+                                             '/produits',
+                                             arguments: servs
+                                         );
+                                       },
+                                      child: Icon(Icons.trending_flat,color: Colors.orange,size: 20,),
+                                     )
                                    ],
                                  ),
                                ],
@@ -298,6 +312,7 @@ class _CollectionFullState extends State<CollectionFull> {
                               color: Colors.grey.withOpacity(0.8),
                               borderRadius:BorderRadius.only(
                                 bottomLeft: Radius.circular(40),
+                                topRight: Radius.circular(40),
                                      ),
 
                             ),
@@ -355,7 +370,7 @@ class _CollectionFullState extends State<CollectionFull> {
                                child:
                                Container(
                                  decoration: BoxDecoration(
-                                   color: Colors.orange,
+                                  color: Color.fromRGBO(202, 115, 64, 1),
                                    borderRadius: BorderRadius.circular(4),
                                  ),
                                  child: Icon(Icons.add,color: Colors.white,size: 20,),),
@@ -401,12 +416,12 @@ class _CollectionFullState extends State<CollectionFull> {
         BottomNavigationBarItem(
         icon: Icon(Icons.notifications),
         label: '',
-        backgroundColor:Colors.white10,
+        backgroundColor:Color.fromRGBO(12, 15, 20, 1),
         ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.orange,
-        unselectedItemColor:  Colors.grey,
+        selectedItemColor: Color.fromRGBO(202, 115, 64, 1),
+        unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
     );
   }

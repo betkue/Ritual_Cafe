@@ -25,11 +25,13 @@ enum Tailles {S, M,L }
 class _ViewProduitFullState extends State<ViewProduitFull> {
   Tailles _taille = Tailles.S;
   int priceadd = 0;
+  bool lirePlus = true;
   @override
   Widget build(BuildContext context) {
    var produit = widget.serv.collections.data[widget.serv.indexCollection].produits[widget.serv.indexProduit] ;
 
-    double width = MediaQuery .of(context).size.width;
+
+   double width = MediaQuery .of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Padding(
@@ -92,7 +94,7 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                               SizedBox(width: 15,),
                               Text("4,5",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),),
                               SizedBox(width: 15,),
-                              Text("(4 566)",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),),
+                              Text("("+produit.avis.length.toString()+")",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),),
                             ],
                           ),
                         ],
@@ -109,28 +111,9 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
             SizedBox(height: 15,),
             produit.description !=null?
             Column(
-              children: [
-                Text(produit.description.split('>')[1].split(';')[0],
-                  maxLines: 2,
-                  style: TextStyle(color: Colors.white),),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: produit.description.split('>')[1].split(';').length >1?
-                  Row(
-                    children: [
-                      Container(
-                        child: Text(produit.description.split('>')[1].split(';')[1],
-                          maxLines: 1,
-                          style: TextStyle(color: Colors.white),),
-                        width: width-150,
-                      ),
-                      Container( width:70,
-                          child: Text('... lire plus',style: TextStyle(color: Colors.orange),))
-                      ,
-                    ],
-                  ): Container(width: 0,height: 0,),
-                )
-              ],
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: lirePlus? grandeDescription(produit.description.split('<p>')[1].split(';')):
+              petiteDescription(produit.description.split('<p>')[1].split(';')),
             )
                 :
             Container(width: 0,height: 0,),
@@ -231,7 +214,7 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(5),
                     child: Text("Acheter Maintenant",textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white,fontSize: 20),
                     ),
@@ -245,6 +228,97 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
       ),
     );
   }
+List<Widget>grandeDescription(List<String> a){
+
+  double width = MediaQuery .of(context).size.width;
+    List<Widget> l = [];
+
+    for(int i = 0;i<a.length;i++){
+      if(a.length == i+1)
+        {
+          Widget text =   Row(
+            children: [
+              Container(
+                child: Text(a[i].split('</p')[0],
+                  maxLines: 1,
+                  style: TextStyle(color: Colors.white),),
+                width: width-150,
+              ),
+              Container( width:70,
+                  child: GestureDetector(
+                    onTap: (){
+                      setState(() {
+                        lirePlus = false;
+                      });
+                    },
+                    child: Text('... moins',style: TextStyle(color: Colors.orange),),
+                  ))
+              ,
+            ],
+          );
+          Text(a[i],
+          maxLines: 2,
+          style: TextStyle(color: Colors.white),);
+          l.add(text);
+
+        }
+      else{
+        Widget text = Text(a[i],
+          maxLines: 2,
+          style: TextStyle(color: Colors.white),);
+        l.add(text);
+      }
 
 
+    }
+
+    return l;
+  }
+  List<Widget> petiteDescription(List<String> a){
+
+    double width = MediaQuery .of(context).size.width;
+    List<Widget> l = [];
+
+    for(int i = 0;i<2;i++){
+      if(i+1 == 2)
+      {
+        Widget text =   Row(
+          children: [
+            Container(
+              child: Text(a[i].split('</p>')[0],
+                maxLines: 1,
+                style: TextStyle(color: Colors.white),),
+              width: width-150,
+            ),
+            Container( width:70,
+                child: GestureDetector(
+                  onTap: (){
+                    setState(() {
+                      lirePlus = true;
+                    });
+                  },
+                  child: Text('...lire plus',style: TextStyle(color: Colors.orange),),
+                ))
+            ,
+          ],
+        );
+        Text(a[i],
+          maxLines: 2,
+          style: TextStyle(color: Colors.white),);
+        l.add(text);
+
+      }
+      else{
+        Widget text = Text(a[i],
+          maxLines: 2,
+          style: TextStyle(color: Colors.white),);
+        l.add(text);
+      }
+
+
+    }
+
+    return l;
+  }
+  
 }
