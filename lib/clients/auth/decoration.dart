@@ -8,9 +8,14 @@ var textInputDecoration = InputDecoration(
   hintStyle: TextStyle(
     color: Colors.blueGrey
   ),
-  border: OutlineInputBorder(borderRadius:
-      BorderRadius.all(Radius.circular(10.0))),
-  contentPadding: EdgeInsets.all(12),
+  disabledBorder:OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      borderSide: BorderSide(color: Color.fromRGBO(44, 51,61, 1),width: 0)
+  ),
+  border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      borderSide: BorderSide(color: Color.fromRGBO(44, 51,61, 1),width: 0)),
+  contentPadding: EdgeInsets.only(bottom: 9,left: 5,right: 5),
   errorBorder: OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(10.0)),
     borderSide: BorderSide(color: Colors.red,width: 1),
@@ -21,7 +26,7 @@ var textInputDecoration = InputDecoration(
   ),
   focusedBorder:OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(10.0)),
-    borderSide: BorderSide(color: Colors.grey,width: 1),
+    borderSide: BorderSide(color: Color.fromRGBO(44, 51,61, 1),width: 0),
   ),
 );
 

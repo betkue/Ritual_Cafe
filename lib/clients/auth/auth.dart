@@ -6,10 +6,9 @@ import 'package:ritual_cafe/models/response.dart';
 import 'package:ritual_cafe/models/user.dart';
 import 'package:ritual_cafe/services/services.dart';
 import 'package:provider/provider.dart';
-
 import '../../loadding.dart';
 import 'decoration.dart';
-
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 class Auth extends StatelessWidget {
   const Auth();
 
@@ -56,6 +55,8 @@ class _AuthFullState extends State<AuthFull> {
   String code = "+237";
   RegExp regExp =    new RegExp(r"^[a-zA-Z0-9._\-*ù^&éè#!§]+@[a-z0-9._-]+\.[a-z]{2,6}");//verification du mail
   RegExp re = new RegExp(r"^[a-zA-Z]+\s[a-zA-Z]+$");//regex nom prenom
+  String initialCountry = 'CM';
+  PhoneNumber number = PhoneNumber(isoCode: 'CM');
   void change(Services serv)
   {
     setState(() {
@@ -121,7 +122,107 @@ class _AuthFullState extends State<AuthFull> {
                   ))),
             ),
           ),
-            Padding(padding: EdgeInsets.only(left: 30,right: 30,top: 10),
+            Padding(
+                padding: EdgeInsets.only(left: 30,right: 30,top: 10),
+              child:
+              !servs.login? GestureDetector(
+                  onTap:() async{
+                    if (formKey.currentState.validate()) {
+                      servs.send  = true;
+                      List<String> nomprenom = nomController.text.split(' ');
+                      User user = User(nomprenom[1], nomprenom[0], mailController.text, passController.text,phoneController.text);
+                      Services serv = Services(UserBdd("",""));
+                      //serv.send=true;
+
+                      ResponseSend result = await serv.inscription(user);
+
+                      if(result.etat)
+                      {
+                        snack(result.message,
+                            Icon(Icons.check, color: Colors.green,));
+                        Navigator.of(context).pushNamedAndRemoveUntil('/',(Route<dynamic> route) => false);
+
+                      }
+                      else
+                      {
+                        setState(() {
+                          error =result.message;
+                        });
+                        snack(result.message,
+                            Icon(Icons.details, color: Colors.red,));
+                      }
+
+                      servs.send  = false;
+                    }
+                  },
+                  child:Container(
+                    width: width,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(202, 115, 64, 1),
+                      borderRadius: BorderRadius.circular(15),
+
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(10) ,
+                      child: Text("Créer un compte",textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white)
+                        ,),
+                    ),
+                  ) ,
+                )
+                  :
+              GestureDetector(
+                onTap:() async {
+                  if (formKey.currentState.validate()) {
+
+                    servs.send  = true;
+                    UserBdd user = UserBdd(passController.text,mailController.text);
+                    Services serv = Services(UserBdd("",""));
+                    ResponseSend result = await serv.connexion(user);
+                    print(result.message);print(result.etat);
+
+                    if(result.etat)
+                    {
+
+                      snack(result.message,
+                          Icon(Icons.check, color: Colors.green,));
+                      Navigator.of(context).pushNamedAndRemoveUntil('/',
+                              (Route<dynamic> route) => false);
+
+                    }
+                    else
+                    {
+
+                      setState(() {
+                        error =result.message;
+                      });
+
+                      snack(result.message, Icon(Icons.details, color: Colors.red,));
+
+                    }
+
+
+
+                    servs.send  = false;
+                  }
+                },
+                child: Container(
+                  width: width,
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(202, 115, 64, 1),
+                    borderRadius: BorderRadius.circular(15),
+
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text("Connexion",textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                ) ,
+              )
+              ,
+            ),
+            Padding(padding: EdgeInsets.only(left: 30,right: 30,top: 30),
             child:
              GestureDetector(
               onTap: (){change(servs); },
@@ -162,7 +263,7 @@ class _AuthFullState extends State<AuthFull> {
             top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
         child:
         TextFormField(
-          cursorColor: Colors.black,
+          cursorColor: Colors.white,
           keyboardType: TextInputType.text,
           controller: nomController,
           style:TextStyle(
@@ -189,7 +290,7 @@ class _AuthFullState extends State<AuthFull> {
         padding: const EdgeInsets.only(
             top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
         child: TextFormField(
-          cursorColor: Colors.black,
+          cursorColor: Colors.white,
           keyboardType: TextInputType.emailAddress,
           controller: mailController,
           style:TextStyle(
@@ -206,47 +307,47 @@ class _AuthFullState extends State<AuthFull> {
         ),
       ),
       Padding(
-        padding: const EdgeInsets.only(left: 16,bottom: 4),
+        padding: const EdgeInsets.only(left: 16),
         child: Text("Numéro de tel",textAlign: TextAlign.start,
           style: TextStyle(color: Colors.white,fontSize: 15,
           ),),
       ),
       Padding(
-        padding: const EdgeInsets.only(left: 16,right: 16),
-        child: IntlPhoneField(
-          initialCountryCode: 'CM',
-          dropDownIcon: Icon(Icons.arrow_right,color: Colors.white,),
-          countryCodeTextColor: Colors.white,
-          inputFormatters:  [
-
-            FilteringTextInputFormatter.allow(
-                RegExp('[0-9]'))
-            ],
-          style:TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold
-          ),
-          decoration: textInputDecoration.copyWith(hintText: 'Phone',hintStyle: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold
-              )),
-          onChanged: (phone) {
-            phoneController.text = phone.completeNumber.toString();
-            print(phoneController.text);
+        padding: const EdgeInsets.only(top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
+        child:  InternationalPhoneNumberInput(
+          onInputChanged: (PhoneNumber number) {
+            print(number.phoneNumber);
           },
-          onCountryChanged: (phone) {
-            phoneController.text = phone.completeNumber.toString();
-            print(phoneController.text);
+          onInputValidated: (bool value) {
+            print(value);
+          },
+          selectorConfig: SelectorConfig(
+            selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+          ),
+          ignoreBlank: false,
+          autoValidateMode: AutovalidateMode.disabled,
+          selectorTextStyle: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+          initialValue: number,
+          cursorColor: Colors.white,
+          textFieldController: phoneController,
+          textStyle: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+          formatInput: true,
+          keyboardType:TextInputType.numberWithOptions(signed: true, decimal: true),
+          inputBorder: OutlineInputBorder(
+
+              borderSide: BorderSide(color: Colors.grey,width: 1),
+              borderRadius:BorderRadius.all(Radius.circular(10.0))),
+          inputDecoration: textInputDecoration.copyWith(hintText: 'Phone',hintStyle: TextStyle(
+
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          )),
+          onSaved: (PhoneNumber number) {
+            print('On Saved: $number');
           },
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.only(
-            top: 5.0,  right: 16.0,left: 16, bottom: 8.0),
 
-        child:Container(),
-
-      ),
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text("Mot de passe",textAlign: TextAlign.start,
@@ -257,7 +358,7 @@ class _AuthFullState extends State<AuthFull> {
         padding: const EdgeInsets.only(
             top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
         child: TextFormField(
-          cursorColor: Colors.black,
+          cursorColor: Colors.white,
           controller: passController,
           obscureText: noView,
           style:TextStyle(
@@ -280,53 +381,6 @@ class _AuthFullState extends State<AuthFull> {
           style: TextStyle(color: Colors.red,
           ),),
       ),
-      SizedBox(height: 10,),
-      GestureDetector(
-        onTap:() async{
-          if (formKey.currentState.validate()) {
-            servs.send  = true;
-            List<String> nomprenom = nomController.text.split(' ');
-            User user = User(nomprenom[1], nomprenom[0], mailController.text, passController.text,phoneController.text);
-            Services serv = Services(UserBdd("",""));
-            //serv.send=true;
-
-            ResponseSend result = await serv.inscription(user);
-
-            if(result.etat)
-            {
-              snack(result.message,
-                  Icon(Icons.check, color: Colors.green,));
-              Navigator.of(context).pushNamedAndRemoveUntil('/',(Route<dynamic> route) => false);
-
-            }
-            else
-            {
-              setState(() {
-                error =result.message;
-              });
-              snack(result.message,
-                  Icon(Icons.details, color: Colors.red,));
-            }
-
-            servs.send  = false;
-          }
-        },
-        child:Container(
-          width: width,
-          decoration: BoxDecoration(
-            color: Color.fromRGBO(202, 115, 64, 1),
-            borderRadius: BorderRadius.circular(15),
-
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(10) ,
-            child: Text("Créer un compte",textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white)
-              ,),
-          ),
-        ) ,
-      ),
-      SizedBox(height: 15,),
 
     ];
   }
@@ -345,7 +399,7 @@ class _AuthFullState extends State<AuthFull> {
         padding: const EdgeInsets.only(
             top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
         child: TextFormField(
-          cursorColor: Colors.black,
+          cursorColor: Colors.white,
           keyboardType: TextInputType.emailAddress,
           controller: mailController,
           style:TextStyle(
@@ -372,7 +426,7 @@ class _AuthFullState extends State<AuthFull> {
         padding: const EdgeInsets.only(
             top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
         child: TextFormField(
-          cursorColor: Colors.black,
+          cursorColor: Colors.white,
           controller: passController,
           obscureText: noView,
           style:TextStyle(
@@ -394,56 +448,6 @@ class _AuthFullState extends State<AuthFull> {
         child: Text(error,textAlign: TextAlign.center,
           style: TextStyle(color: Colors.red,
           ),),
-      ),
-      SizedBox(height:30 ,),
-      GestureDetector(
-        onTap:() async {
-          if (formKey.currentState.validate()) {
-
-            servs.send  = true;
-            UserBdd user = UserBdd(passController.text,mailController.text);
-            Services serv = Services(UserBdd("",""));
-            ResponseSend result = await serv.connexion(user);
-            print(result.message);print(result.etat);
-
-            if(result.etat)
-            {
-
-                              snack(result.message,
-                                  Icon(Icons.check, color: Colors.green,));
-                              Navigator.of(context).pushNamedAndRemoveUntil('/',
-                                      (Route<dynamic> route) => false);
-
-            }
-            else
-            {
-
-              setState(() {
-                error =result.message;
-              });
-
-                snack(result.message, Icon(Icons.details, color: Colors.red,));
-
-            }
-
-
-
-            servs.send  = false;
-          }
-        },
-        child: Container(
-          width: width,
-          decoration: BoxDecoration(
-            color: Color.fromRGBO(202, 115, 64, 1),
-            borderRadius: BorderRadius.circular(15),
-
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Text("Connexion",textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white)),
-          ),
-        ) ,
       ),
     ];
   }
