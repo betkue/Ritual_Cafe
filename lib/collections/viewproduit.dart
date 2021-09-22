@@ -1,7 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ritual_cafe/models/json/collectionjson.dart';
+import 'package:ritual_cafe/models/optionParameter.dart';
 import 'package:ritual_cafe/services/services.dart';
+import 'ExpandedListAnimationWidget.dart';
+import 'Scrollbar.dart';
 
 class ViewProduit extends StatelessWidget {
   Services serv;
@@ -21,15 +24,18 @@ class ViewProduitFull extends StatefulWidget {
   @override
   _ViewProduitFullState createState() => _ViewProduitFullState();
 }
-enum Tailles {S, M,L }
+
 class _ViewProduitFullState extends State<ViewProduitFull> {
-  Tailles _taille = Tailles.S;
   int priceadd = 0;
-  bool lirePlus = true;
+  int price = 0;
+  bool lirePlus = false;
+  List<bool> viewVariant = [];
+  List<bool> requiredVarriant = [];
+  List<OptionParameter> optionsParameters = [];
   @override
   Widget build(BuildContext context) {
    var produit = widget.serv.collections.data[widget.serv.indexCollection].produits[widget.serv.indexProduit] ;
-
+    price = produit.price;
 
    double width = MediaQuery .of(context).size.width;
     return Scaffold(
@@ -117,78 +123,11 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
             )
                 :
             Container(width: 0,height: 0,),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children:[
-                SizedBox(height: 20,),
-                Text("Taille",
-                  style: TextStyle(color: Colors.grey,fontSize: 15),),
-
-                Theme(
-                    data: ThemeData(
-                        unselectedWidgetColor: Colors.white,
-                          ),
-                        child:  RadioListTile<Tailles>(
-                             dense: true,
-                            activeColor: Colors.orangeAccent,
-                         title: const Text('S',style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20
-                      )),
-                      value: Tailles.S,
-                      groupValue: _taille,
-                      onChanged: (Tailles value) {
-                        setState(() {
-                          _taille = value;
-                          priceadd = 0;
-                        });
-                      },
-                    )),
-                Theme(
-                    data: ThemeData(
-                      unselectedWidgetColor: Colors.white,
-                    ),
-                    child: RadioListTile<Tailles>(
-                        activeColor: Colors.orangeAccent,
-                        title: const Text('M',style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20
-                        )),
-                        secondary:Text("+ "+produit.variants[0].options[0].additionnalFee.toString()+ " FCFA",style: TextStyle(color: Colors.orange),),
-                        value: Tailles.M,
-                        groupValue: _taille,
-                        onChanged: (Tailles value) {
-                          setState(() {
-                            _taille = value;
-                            priceadd = produit.variants[0].options[0].additionnalFee;
-                          });
-                  },
-                )),
-                Theme(
-                    data: ThemeData(
-                      unselectedWidgetColor: Colors.white,
-                    ),
-                    child: RadioListTile<Tailles>(
-                      activeColor: Colors.orangeAccent,
-                      title: const Text('L',style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20
-                      )),
-                      secondary:Text("+ "+produit.variants[0].options[1].additionnalFee.toString() + " FCFA",style: TextStyle(color: Colors.orange),),
-                      value: Tailles.L,
-                      groupValue: _taille,
-                      onChanged: (Tailles value) {
-                        setState(() {
-                          _taille = value;
-                          priceadd = produit.variants[0].options[1].additionnalFee;
-                        });
-                  },
-                )),
-
-                ]),
+            Padding(padding: EdgeInsets.all(16),
+            child: Column(
+              children: chowVarriantes(produit.variants),
+            ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -199,7 +138,7 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                     SizedBox(height: 5,),
                     Row(
                       children: [
-                        Text((produit.price+priceadd).toString(),
+                        Text((price+priceadd).toString(),
                             style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
                         Text(" F.CFA",
                           style: TextStyle(color: Colors.orangeAccent,fontSize: 20,fontWeight: FontWeight.bold),),
@@ -320,5 +259,141 @@ List<Widget>grandeDescription(List<String> a){
 
     return l;
   }
-  
+  List<Widget> chowVarriantes(List<Variants> varriantes){
+    for(int i = 0; i <varriantes.length;i++){
+      viewVariant.add(false);
+      optionsParameters.add(OptionParameter(varriantes[i].maxChoices, []));
+      varriantes[i].required ? requiredVarriant.add(false):requiredVarriant.add(true);
+      for(int y = 0; y<varriantes[i].options.length;y++){
+        optionsParameters[i].optionValue.add(false);
+      }
+    }
+    List<Widget> l = [];
+    int indexFirst = 2;
+    for(int i = 0; i <varriantes.length;i++){
+      if(indexFirst != i   ){
+
+        Widget a = SafeArea(
+          child: Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Color(0xffbbbbbb)),
+                            borderRadius: BorderRadius.all(Radius.circular(27))),
+                        child: Column(
+                          children: [
+                            Container(
+                              // height: 45,
+                                width: double.infinity,
+                                padding: EdgeInsets.only(right: 10),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Color(0xffbbbbbb),
+                                    ),
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(25))),
+                                constraints: BoxConstraints(
+                                  minHeight: 45,
+                                  minWidth: double.infinity,
+                                ),
+                                alignment: Alignment.center,
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 10),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              varriantes[i].name ,
+                                              style: TextStyle(color: Colors.white),
+                                            ),
+                                            varriantes[i].required? Text(
+                                              "*",
+                                              style: TextStyle(color: Colors.red),
+                                            ):
+                                            Text(
+                                              "",
+                                              style: TextStyle(color: Colors.white38),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            viewVariant[i] = !viewVariant[i];
+                                            print(viewVariant[i]);
+                                          });
+                                        },
+                                        child: Icon(viewVariant[i]
+                                            ? Icons.arrow_upward
+                                            : Icons.arrow_downward,color: Colors.white,))
+                                  ],
+                                )),
+                            ExpandedSection(
+                              expand: viewVariant[i],
+
+                              height: 100,
+                              child: MyScrollbar(
+                                builder: (context, scrollController2) =>
+                                    ListView.builder(
+                                        padding: EdgeInsets.all(0),
+                                        controller: scrollController2,
+                                        shrinkWrap: true,
+                                        itemCount: varriantes[i].options.length,
+                                        itemBuilder: (context, index) {
+                                          return GestureDetector(
+                                            onTap: (){
+                                            },
+                                            child: ListTile(
+                                                leading:  Checkbox(
+                                                    checkColor:Colors.black,
+                                                    fillColor:MaterialStateProperty.resolveWith(getColor),
+                                                    value: optionsParameters[i].optionValue[index],
+                                                    onChanged: null) ,
+                                                title:  Text(varriantes[i].options[index].name,style: TextStyle(color: Colors.white),),
+                                                trailing:
+                                                varriantes[i].options[index].additionnalFee >0? Text("+ "+varriantes[i].options[index].additionnalFee.toString()+" Fcfa",
+                                                  style: TextStyle(color: Color.fromRGBO(202, 115, 64, 1),),):
+                                                Container(width: 0,height: 0,)
+
+                                            ),
+                                          );
+                                        }),
+                              ),
+                            )
+                          ],
+                        ),
+                      )),
+                ],
+              )
+            ],
+          ),
+        );
+        l.add(a);
+      }
+    }
+    return l;
+  }
+  Color getColor(Set<MaterialState> states) {
+    const Set<MaterialState> interactiveStates = <MaterialState>{
+      MaterialState.pressed,
+      MaterialState.hovered,
+      MaterialState.focused,
+    };
+    if (states.any(interactiveStates.contains)) {
+      return Colors.white;
+    }
+    return Colors.white;
+  }
+
 }
