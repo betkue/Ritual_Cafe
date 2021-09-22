@@ -26,6 +26,29 @@ class ViewProduitFull extends StatefulWidget {
 }
 
 class _ViewProduitFullState extends State<ViewProduitFull> {
+  void snack(String a,double width) {
+    SnackBar snackbar =  SnackBar(
+      content:
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            width: width,
+            child: Text(a, textAlign: TextAlign.start,
+              style: new TextStyle(color: Colors.white),
+              maxLines: 3,
+            ),
+          ),
+          Container(
+            width: 20,
+            child: Icon(Icons.cancel,color: Colors.red,size: 20,),
+          )
+
+        ],
+      ),
+      backgroundColor: Colors.black54,);
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  }
   int priceadd = 0;
   int price = 0;
   bool lirePlus = false;
@@ -125,7 +148,7 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
             Container(width: 0,height: 0,),
             Padding(padding: EdgeInsets.all(16),
             child: Column(
-              children: chowVarriantes(produit.variants),
+              children: chowVarriantes(produit.variants,width-100),
             ),
             ),
             Row(
@@ -259,10 +282,10 @@ List<Widget>grandeDescription(List<String> a){
 
     return l;
   }
-  List<Widget> chowVarriantes(List<Variants> varriantes){
+  List<Widget> chowVarriantes(List<Variants> varriantes,double width){
     for(int i = 0; i <varriantes.length;i++){
       viewVariant.add(false);
-      optionsParameters.add(OptionParameter(varriantes[i].maxChoices, []));
+      optionsParameters.add(OptionParameter(varriantes[i].maxChoices, [],0));
       varriantes[i].required ? requiredVarriant.add(false):requiredVarriant.add(true);
       for(int y = 0; y<varriantes[i].options.length;y++){
         optionsParameters[i].optionValue.add(false);
@@ -359,7 +382,39 @@ List<Widget>grandeDescription(List<String> a){
                                                     checkColor:Colors.black,
                                                     fillColor:MaterialStateProperty.resolveWith(getColor),
                                                     value: optionsParameters[i].optionValue[index],
-                                                    onChanged: null) ,
+                                                    onChanged: (bool value){
+                                                      if(optionsParameters[i].actualChoice<optionsParameters[i].maxChoice)
+                                                      {
+
+                                                        setState(() {
+                                                          optionsParameters[i].optionValue[index]?priceadd =priceadd-varriantes[i].options[index].additionnalFee
+                                                              :
+                                                          priceadd =priceadd+varriantes[i].options[index].additionnalFee;
+                                                          optionsParameters[i].optionValue[index]? optionsParameters[i].actualChoice--
+                                                              :
+                                                          optionsParameters[i].actualChoice++;
+                                                          optionsParameters[i].optionValue[index] = value;
+                                                        });
+                                                      }
+                                                      else{
+                                                          setState(() {
+                                                            optionsParameters[i].optionValue[index]?priceadd =priceadd-varriantes[i].options[index].additionnalFee
+                                                                :
+                                                            priceadd =priceadd+varriantes[i].options[index].additionnalFee;
+                                                            optionsParameters[i].optionValue[index]?optionsParameters[i].actualChoice--
+                                                                :
+                                                            optionsParameters[i].actualChoice=optionsParameters[i].actualChoice;
+                                                            optionsParameters[i].optionValue[index]?optionsParameters[i].optionValue[index]=value
+                                                                :
+                                                            snack("Le nombre de choix maximum de "+ varriantes[i].name+ " est de : "+varriantes[i].maxChoices.toString(),
+                                                              width
+                                                            );
+                                                          });
+                                                      }
+
+                                                      print(optionsParameters[i].actualChoice.toString()+"??????"+optionsParameters[i].maxChoice.toString());
+                                                    }
+                                                ) ,
                                                 title:  Text(varriantes[i].options[index].name,style: TextStyle(color: Colors.white),),
                                                 trailing:
                                                 varriantes[i].options[index].additionnalFee >0? Text("+ "+varriantes[i].options[index].additionnalFee.toString()+" Fcfa",
@@ -391,7 +446,7 @@ List<Widget>grandeDescription(List<String> a){
       MaterialState.focused,
     };
     if (states.any(interactiveStates.contains)) {
-      return Colors.white;
+      return Color.fromRGBO(202, 115, 64, 1);
     }
     return Colors.white;
   }
