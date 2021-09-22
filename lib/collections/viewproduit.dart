@@ -58,7 +58,7 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
   @override
   Widget build(BuildContext context) {
    var produit = widget.serv.collections.data[widget.serv.indexCollection].produits[widget.serv.indexProduit] ;
-    price = produit.price;
+    //price = produit.price;
 
    double width = MediaQuery .of(context).size.width;
     return Scaffold(
@@ -121,7 +121,7 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                             children: [
                               Icon(Icons.star,color: Colors.orange,),
                               SizedBox(width: 15,),
-                              Text("4,5",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),),
+                              Text(createNote(produit.avis),style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),),
                               SizedBox(width: 15,),
                               Text("("+produit.avis.length.toString()+")",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),),
                             ],
@@ -146,9 +146,9 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
             )
                 :
             Container(width: 0,height: 0,),
-            Padding(padding: EdgeInsets.all(16),
+            Padding(padding: EdgeInsets.only(top: 10,bottom: 10),
             child: Column(
-              children: chowVarriantes(produit.variants,width-100),
+              children: chowVarriantes(produit.variants,width-100,produit.price),
             ),
             ),
             Row(
@@ -161,7 +161,7 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                     SizedBox(height: 5,),
                     Row(
                       children: [
-                        Text((price+priceadd).toString(),
+                        Text((price !=0?price+priceadd:produit.price+priceadd).toString(),
                             style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
                         Text(" F.CFA",
                           style: TextStyle(color: Colors.orangeAccent,fontSize: 20,fontWeight: FontWeight.bold),),
@@ -282,18 +282,175 @@ List<Widget>grandeDescription(List<String> a){
 
     return l;
   }
-  List<Widget> chowVarriantes(List<Variants> varriantes,double width){
-    for(int i = 0; i <varriantes.length;i++){
+  List<Widget> chowVarriantes(List<Variants> varriantes,double width,int prixInitial){
+
+    int indexFirst  ;
+    bool priceChange = false;
+    List<Widget> l = [];
+    for(int i = 0; i <varriantes.length;i++)
+    {
       viewVariant.add(false);
       optionsParameters.add(OptionParameter(varriantes[i].maxChoices, [],0));
       varriantes[i].required ? requiredVarriant.add(false):requiredVarriant.add(true);
       for(int y = 0; y<varriantes[i].options.length;y++){
         optionsParameters[i].optionValue.add(false);
+        if(varriantes[i].options[y].price >0)priceChange = true;
+        if(priceChange) indexFirst = y;
       }
+
     }
-    List<Widget> l = [];
-    int indexFirst = 2;
+    if(indexFirst!= null)
+      {
+        Widget first = SafeArea(
+          child: Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Color(0xffbbbbbb)),
+                            borderRadius: BorderRadius.all(Radius.circular(27))),
+                        child: Column(
+                          children: [
+                            Container(
+                              // height: 45,
+                                width: double.infinity,
+                                padding: EdgeInsets.only(right: 10),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Color(0xffbbbbbb),
+                                    ),
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(25))),
+                                constraints: BoxConstraints(
+                                  minHeight: 45,
+                                  minWidth: double.infinity,
+                                ),
+                                alignment: Alignment.center,
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 10),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              varriantes[indexFirst].name ,
+                                              style: TextStyle(color: Colors.white),
+                                            ),
+                                            varriantes[indexFirst].required? Text(
+                                              "*",
+                                              style: TextStyle(color: Colors.red),
+                                            ):
+                                            Text(
+                                              "",
+                                              style: TextStyle(color: Colors.white38),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            viewVariant[indexFirst] = !viewVariant[indexFirst];
+                                            print(viewVariant[indexFirst]);
+                                          });
+                                        },
+                                        child: Icon(viewVariant[indexFirst]
+                                            ? Icons.arrow_upward
+                                            : Icons.arrow_downward,color: Colors.white,))
+                                  ],
+                                )),
+                            ExpandedSection(
+                              expand: viewVariant[indexFirst],
+
+                              height: 100,
+                              child: MyScrollbar(
+                                builder: (context, scrollController2) =>
+                                    ListView.builder(
+                                        padding: EdgeInsets.all(0),
+                                        controller: scrollController2,
+                                        shrinkWrap: true,
+                                        itemCount: varriantes[indexFirst].options.length,
+                                        itemBuilder: (context, index) {
+                                          return varriantes[indexFirst].options[index].price>0?
+                                          GestureDetector(
+                                            onTap: (){
+                                            },
+                                            child: ListTile(
+                                               leading: Checkbox(
+                                                    checkColor:Colors.black,
+                                                    fillColor:MaterialStateProperty.resolveWith(getColor),
+                                                    value: optionsParameters[indexFirst].optionValue[index],
+                                                    onChanged: (bool value){
+                                                      if(optionsParameters[indexFirst].actualChoice<optionsParameters[indexFirst].maxChoice)
+                                                      {
+                                                        print(varriantes[indexFirst].options[index].price);
+
+                                                        setState(() {
+                                                          optionsParameters[indexFirst].optionValue[index]? optionsParameters[indexFirst].actualChoice--
+                                                              :
+                                                          optionsParameters[indexFirst].actualChoice++;
+                                                          optionsParameters[indexFirst].optionValue[index] = value;
+                                                        });
+
+                                                        print(price);
+                                                        print(priceadd);
+                                                      }
+                                                      else{
+                                                        setState(() {
+                                                          optionsParameters[indexFirst].optionValue[index]?optionsParameters[indexFirst].actualChoice--
+                                                              :
+                                                          optionsParameters[indexFirst].actualChoice=optionsParameters[indexFirst].actualChoice;
+                                                          optionsParameters[indexFirst].optionValue[index]?optionsParameters[indexFirst].optionValue[index]=value
+                                                              :
+                                                          snack("Le nombre de choix maximum de "+ varriantes[indexFirst].name+ " est de : "+varriantes[indexFirst].maxChoices.toString(),
+                                                              width
+                                                          );
+                                                        });
+                                                      }
+                                                      setState(() {
+
+                                                        optionsParameters[indexFirst].optionValue[index]?
+                                                        price =prixInitial
+                                                            :
+                                                        price =varriantes[indexFirst].options[index].price;
+                                                      });
+
+                                                      print(optionsParameters[indexFirst].actualChoice.toString()+"??????"+optionsParameters[indexFirst].maxChoice.toString());
+                                                    }
+                                                ),
+                                                title:  Text(varriantes[indexFirst].options[index].name,style: TextStyle(color: Colors.white),),
+                                                trailing:
+                                                varriantes[indexFirst].options[index].price ==0? Text(varriantes[indexFirst].options[index].price.toString()+" Fcfa",
+                                                  style: TextStyle(color: Color.fromRGBO(202, 115, 64, 1),),):
+                                                Container(width: 0,height: 0,)
+
+                                            ),
+                                          )
+                                          :
+                                          Container(width: 0,height: 0,);
+                                        }),
+                              ),
+                            )
+                          ],
+                        ),
+                      )),
+                ],
+              )
+            ],
+          ),
+        );
+        l.add(first);
+      }
     for(int i = 0; i <varriantes.length;i++){
+
       if(indexFirst != i   ){
 
         Widget a = SafeArea(
@@ -449,6 +606,18 @@ List<Widget>grandeDescription(List<String> a){
       return Color.fromRGBO(202, 115, 64, 1);
     }
     return Colors.white;
+  }
+
+  String createNote(List<Avis >avis){
+    String note = '';
+    double notes = 0;
+    for(int i = 0;i<avis.length;i++){
+      notes = notes + avis[i].note;
+    }
+    if(avis.length>0) notes = notes/avis.length;
+    note = notes.toStringAsPrecision(1);
+    note = note.split('.').length >1? note.split('.')[0]  + ','+note.split('.')[1] : note;
+    return note;
   }
 
 }

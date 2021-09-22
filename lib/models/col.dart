@@ -1,4 +1,5 @@
-import 'dart:convert';
+/*
+* import 'dart:convert';
 CollectionsJson CollectionsJsonFromJson(String str) => CollectionsJson.fromJson(json.decode(str));
 String CollectionsJsonToJson(CollectionsJson data) => json.encode(data.toJson());
 class CollectionsJson {
@@ -67,7 +68,7 @@ class Data {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     if (json['produits'] != null) {
-      produits = < Produits>[];
+      produits = new List<Produits>();
       json['produits'].forEach((v) {
         produits.add(new Produits.fromJson(v));
       });
@@ -442,7 +443,21 @@ class Variants {
   }
 }
 
+class Avis {
+  Null avis;
 
+  Avis( {this.avis});
+
+  Avis.fromJson(Map<String, dynamic> json) {
+    avis = json['avis'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['avis'] = this.avis;
+    return data;
+  }
+}
 
 class Options {
   int id;
@@ -538,157 +553,5 @@ class Meta {
     return data;
   }
 }
-class Avis {
-  int id;
-  String message;
-  int note;
-  int clientId;
-  String createdAt;
-  String updatedAt;
-  int avisableId;
-  String avisableType;
-  List<Med> medias;
-  Client client;
 
-  Avis(
-      {this.id,
-        this.message,
-        this.note,
-        this.clientId,
-        this.createdAt,
-        this.updatedAt,
-        this.avisableId,
-        this.avisableType,
-        this.medias,
-        this.client});
-
-  Avis.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    message = json['message'];
-    note = json['note'];
-    clientId = json['client_id'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    avisableId = json['avisable_id'];
-    avisableType = json['avisable_type'];
-    if (json['medias'] != null) {
-      medias =  <Med>[];
-      json['medias'].forEach((v) {
-        medias.add(new Med.fromJson(v));
-      });
-    }
-    client =
-    json['client'] != null ? new Client.fromJson(json['client']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['message'] = this.message;
-    data['note'] = this.note;
-    data['client_id'] = this.clientId;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['avisable_id'] = this.avisableId;
-    data['avisable_type'] = this.avisableType;
-    if (this.medias != null) {
-      data['medias'] = this.medias.map((v) => v.toJson()).toList();
-    }
-    if (this.client != null) {
-      data['client'] = this.client.toJson();
-    }
-    return data;
-  }
-}
-
-class Client {
-  int id;
-  String firstname;
-  String surname;
-  String email;
-  String tel;
-  String sex;
-  String birthDate;
-  String profilePicture;
-  int phoneVerified;
-  Null other;
-  String createdAt;
-  String updatedAt;
-  Null stripeId;
-  Null cardBrand;
-  Null cardLastFour;
-  Null trialEndsAt;
-
-  Client(
-      {this.id,
-        this.firstname,
-        this.surname,
-        this.email,
-        this.tel,
-        this.sex,
-        this.birthDate,
-        this.profilePicture,
-        this.phoneVerified,
-        this.other,
-        this.createdAt,
-        this.updatedAt,
-        this.stripeId,
-        this.cardBrand,
-        this.cardLastFour,
-        this.trialEndsAt});
-
-  Client.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    firstname = json['firstname'];
-    surname = json['surname'];
-    email = json['email'];
-    tel = json['tel'];
-    sex = json['sex'];
-    birthDate = json['birth_date'];
-    profilePicture = json['profile_picture'];
-    phoneVerified = json['phone_verified'];
-    other = json['other'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    stripeId = json['stripe_id'];
-    cardBrand = json['card_brand'];
-    cardLastFour = json['card_last_four'];
-    trialEndsAt = json['trial_ends_at'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['firstname'] = this.firstname;
-    data['surname'] = this.surname;
-    data['email'] = this.email;
-    data['tel'] = this.tel;
-    data['sex'] = this.sex;
-    data['birth_date'] = this.birthDate;
-    data['profile_picture'] = this.profilePicture;
-    data['phone_verified'] = this.phoneVerified;
-    data['other'] = this.other;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['stripe_id'] = this.stripeId;
-    data['card_brand'] = this.cardBrand;
-    data['card_last_four'] = this.cardLastFour;
-    data['trial_ends_at'] = this.trialEndsAt;
-    return data;
-  }
-}
-class Med {
-  Null avis;
-
-  Med( {this.avis});
-
-  Med.fromJson(Map<String, dynamic> json) {
-    avis = json['avis'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['avis'] = this.avis;
-    return data;
-  }
-}
+* */
