@@ -6,6 +6,8 @@ import 'package:ritual_cafe/models/json/collectionjson.dart';
 import 'package:ritual_cafe/services/services.dart';
 import 'package:provider/provider.dart';
 import '../loadding.dart';
+import 'ExpandedListAnimationWidget.dart';
+import 'Scrollbar.dart';
 
 class Collections extends StatelessWidget {
  final  Services serv;
@@ -37,9 +39,9 @@ class _CollectionFullState extends State<CollectionFull> {
 
 
   List<bool> etats =[];
-  void recherche(){
-
-  }
+  List<String> foodList =[];
+  List<String> stableList =[];
+  bool inSeach = false;
   final rechercheController = TextEditingController();
   @override
   void dispose() {
@@ -56,7 +58,8 @@ class _CollectionFullState extends State<CollectionFull> {
               AsyncSnapshot<CollectionsJson> snapshot) {
             if (snapshot.hasData) {
               CollectionsJson collections = snapshot.data;
-            return   Scaffold(
+              stableList = grnaratelist(collections) ;
+              return   Scaffold(
                   backgroundColor: Colors.black,
                   appBar: AppBar(
                     backgroundColor: Colors.black,
@@ -102,35 +105,164 @@ class _CollectionFullState extends State<CollectionFull> {
                       ) ,),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(
-                    top: 16.0, left: 30.0, right: 30.0, bottom: 8.0),
-                    child: TextFormField(
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 11.0,color: Colors.white,fontStyle: FontStyle.italic),
-                      cursorColor: Colors.white,
-                      controller: rechercheController,
-                      decoration: InputDecoration(
-                          fillColor: Colors.white12,
-                          filled: true,
-                          border: OutlineInputBorder(borderRadius:
-                            BorderRadius.all(Radius.circular(10.0))),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey,width: 1),
-                          ),
-                          contentPadding: new EdgeInsets.symmetric(vertical: 0.0),
-                          prefixIcon: Padding(
-                            padding: EdgeInsets.all(0.0),
-                            child:GestureDetector(
-                              onTap: (){recherche();},
-                              child:  Icon(
-                                Icons.search,
-                                color: Colors.grey,
-                              ),
-                            ), // icon is 48px widget.
-                          ),
-                          labelText: 'Trouver votre plaisir',
-                          labelStyle: TextStyle(fontSize: 20.0,color: Colors.grey)),
+                    padding: const EdgeInsets.only(top: 15,left: 30,right: 30,bottom: 5),
+                    child: SafeArea(
+                      child: Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                  child: Container(
+                                    //decoration: BoxDecoration(border: Border.all(color: Colors.grey),borderRadius: BorderRadius.all(Radius.circular(10))),
+                                    child: Column(
+                                      children: [
+                                        TextFormField(
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(fontSize: 11.0,color: Colors.white,fontStyle: FontStyle.italic),
+                                            cursorColor: Colors.white,
+                                            controller: rechercheController,
+                                            decoration: InputDecoration(
+                                                fillColor: Colors.white12,
+                                                filled: true,
+                                                border: OutlineInputBorder(borderRadius:
+                                                BorderRadius.all(Radius.circular(10.0))),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                                  borderSide: BorderSide(color: Colors.grey,width: 0),
+                                                ),
+                                                contentPadding: new EdgeInsets.symmetric(vertical: 0.0),
+                                                prefixIcon: Padding(
+                                                  padding: EdgeInsets.all(0.0),
+                                                  child:GestureDetector(
+                                                    onTap: (){
+                                                      setState(() {
+                                                        foodList = [];
+                                                        for(int i=0; i<stableList.length; i++)
+                                                        {
+                                                          print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+
+                                                          if(stableList[i].toLowerCase().contains(rechercheController.text.toLowerCase()))
+                                                          {
+                                                            setState(() {
+                                                              foodList.add(stableList[i]);
+                                                            });
+                                                          }
+                                                          print(foodList.toString()+stableList[i].contains(rechercheController.text).toString());
+                                                          print(rechercheController.text);
+
+                                                        }
+                                                      });
+                                                    },
+                                                    child:  Icon(
+                                                      Icons.search,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ), // icon is 48px widget.
+                                                ),
+                                                suffixIcon: Padding(
+                                                  padding: EdgeInsets.all(0.0),
+                                                  child:GestureDetector(
+                                                    onTap: (){
+                                                      setState(() {
+                                                        inSeach = false;
+                                                        rechercheController.text = '';
+                                                      });
+                                                    },
+                                                    child:  Icon(
+                                                      Icons.cancel_outlined,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ), // icon is 48px widget.
+                                                ),
+                                                labelText: 'Trouver votre plaisir',
+                                                labelStyle: TextStyle(fontSize: 20.0,color: Colors.grey)),
+                                            onTap: (){
+                                              setState(() {
+                                                inSeach = true;
+                                              });
+                                            },
+                                            onChanged: (value) {
+                                              setState(() {
+                                                    foodList = [];
+                                                    for(int i=0; i<stableList.length; i++)
+                                                    {
+                                                      print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+
+                                                      if(stableList[i].toLowerCase().contains(rechercheController.text.toLowerCase()))
+                                                      {
+                                                        setState(() {
+                                                          foodList.add(stableList[i]);
+                                                        });
+                                                      }
+                                                      print(foodList.toString()+stableList[i].contains(rechercheController.text).toString());
+                                                      print(rechercheController.text);
+
+                                                    }
+                                              });
+                                            }
+                                        ),
+                                        Container(
+                                          //decoration: BoxDecoration(border: Border.all(color: Colors.grey),borderRadius: BorderRadius.all(Radius.circular(10))),
+                                          child: ExpandedSection(
+                                            expand: inSeach,
+                                            height: 100,
+                                            child: MyScrollbar(
+
+                                              builder: (context, scrollController2) =>
+                                                  ListView.builder(
+                                                      padding: EdgeInsets.all(0),
+                                                      controller: scrollController2,
+                                                      shrinkWrap: true,
+                                                      itemCount: foodList.length,
+                                                      itemBuilder: (context, index) {
+                                                        return foodList.length>0?
+                                                        GestureDetector(
+                                                          onTap: (){
+
+                                                            setState(() {
+                                                              etats[servs.indexCollection] = false;
+                                                              servs.indexCollection= stableList.indexOf(foodList[index]);
+                                                              etats[servs.indexCollection] = true;
+                                                              inSeach = !inSeach;
+                                                              rechercheController.text = foodList[index];
+
+                                                            });
+                                                          },
+                                                          child: ListTile(
+                                                              leading:  Container(
+                                                                  height:30,
+                                                                  width: 30,
+                                                                  decoration: BoxDecoration(
+                                                                    image: DecorationImage(
+                                                                      image: NetworkImage(collections.data[stableList.indexOf(foodList[index])].produits[0].medias[0].link),
+                                                                      fit: BoxFit.cover,
+                                                                    ),
+                                                                    borderRadius: BorderRadius.all(Radius.circular(10.0)
+                                                                    ),
+                                                                  )) ,
+                                                              title:  Text(foodList[index],style: TextStyle(color: Colors.white),maxLines: 2,),
+
+                                                          ),
+                                                        )
+                                                        :Text(
+                                                          'Aucune collections ne correspond a cette recherche',
+                                                          style: TextStyle(
+                                                              fontSize: 10,fontStyle: FontStyle.italic, fontWeight: FontWeight.w600),
+                                                        );
+                                                      }),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                     Padding(
@@ -239,6 +371,14 @@ class _CollectionFullState extends State<CollectionFull> {
           }
       ),
     );
+  }
+  List<String>grnaratelist(CollectionsJson collectionsJson){
+    List<String> l =[];
+    var data =collectionsJson.data;
+    for(var i =0;i<data.length;i++){
+      l.add(data[i].name);
+    }
+    return l;
   }
   List<Widget>createlistcollection(CollectionsJson collectionsJson,Services servs){
     List<Widget> l =[];

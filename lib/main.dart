@@ -52,11 +52,11 @@ class _MyHomePageState extends State<MyHomePage> {
               List<UserBdd>  users = snapshot.data;
               UserBdd user = users[0];
               if(user.email=="")//si pas d'utilisateur enregistré
-              {//aller a l'authentificatiion
+                  {//aller a l'authentificatiion
                 return Auth();
               }
               else//sinon
-              {
+                  {
                 //pour toujours avoir le mail d'utilisateur en cas de besoin
                 Services serv  = Services(user);
                 print(user.email);

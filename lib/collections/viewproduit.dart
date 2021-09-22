@@ -381,8 +381,7 @@ List<Widget>grandeDescription(List<String> a){
                                         itemBuilder: (context, index) {
                                           return varriantes[indexFirst].options[index].price>0?
                                           GestureDetector(
-                                            onTap: (){
-                                            },
+                                            onTap: (){},
                                             child: ListTile(
                                                leading: Checkbox(
                                                     checkColor:Colors.black,
