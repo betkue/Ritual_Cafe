@@ -337,11 +337,7 @@ class _AuthFullState extends State<AuthFull> {
 
               borderSide: BorderSide(color: Colors.grey,width: 1),
               borderRadius:BorderRadius.all(Radius.circular(10.0))),
-          inputDecoration: textInputDecoration.copyWith(hintText: 'Phone',hintStyle: TextStyle(
-
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          )),
+          inputDecoration: textInputDecoration.copyWith(hintText: 'Phone',),
           onSaved: (PhoneNumber number) {
             print('On Saved: $number');
           },

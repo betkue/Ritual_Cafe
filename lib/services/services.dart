@@ -95,7 +95,7 @@ class Services with ChangeNotifier {
       case 403 :
         final String responsestring  = response.body;
         ErrorConnexion result = ErrorConnexionFromJson(responsestring);
-        return ResponseSend(false, result.message);
+        return ResponseSend(false, result.message +" \n "+ result.special);
         break;
       default:
         return ResponseSend(false, 'Error connexion');
@@ -129,7 +129,7 @@ class Services with ChangeNotifier {
       case 403 :
         final String responsestring  = response.body;
         ErrorLogin result = ErrorLoginFromJson(responsestring);
-        return ResponseSend(false, 'echec conextion');
+        return ResponseSend(false, "Echec Connexion");
         break;
       default:
         return ResponseSend(false, 'Error connexion');

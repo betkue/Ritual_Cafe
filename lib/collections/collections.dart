@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/painting.dart';
 import 'package:ritual_cafe/clients/auth/decoration.dart';
 import 'package:ritual_cafe/models/json/collectionjson.dart';
 import 'package:ritual_cafe/services/services.dart';
@@ -93,17 +94,13 @@ class _CollectionFullState extends State<CollectionFull> {
                   body: ListView(
                 children: [
                   Padding(padding: EdgeInsets.only(right: 31,left: 31,top: 5),
-                    child: Text('Consommer le meilleur ',
+                    child: Text('Consommer le meilleur \nCafé du Cameroun ',
                       style:TextStyle(color: Colors.white,
-                      fontSize: 25,
+                      fontSize: 26,
+                        fontWeight: FontWeight.bold
                       ) ,),
                   ),
-                  Padding(padding: EdgeInsets.only(right: 30,left: 30,top: 5,bottom: 5),
-                    child: Text('Café du Cameroun',
-                      style:TextStyle(color: Colors.white,
-                        fontSize: 25,
-                      ) ,),
-                  ),
+
                   Padding(
                     padding: const EdgeInsets.only(top: 15,left: 30,right: 30,bottom: 5),
                     child: SafeArea(
@@ -123,7 +120,7 @@ class _CollectionFullState extends State<CollectionFull> {
                                             cursorColor: Colors.white,
                                             controller: rechercheController,
                                             decoration: InputDecoration(
-                                                fillColor: Colors.white12,
+                                                fillColor: Color.fromRGBO(82, 92, 113, 0.3),
                                                 filled: true,
                                                 border: OutlineInputBorder(borderRadius:
                                                 BorderRadius.all(Radius.circular(10.0))),
@@ -140,8 +137,6 @@ class _CollectionFullState extends State<CollectionFull> {
                                                         foodList = [];
                                                         for(int i=0; i<stableList.length; i++)
                                                         {
-                                                          print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-
 
                                                           if(stableList[i].toLowerCase().contains(rechercheController.text.toLowerCase()))
                                                           {
@@ -149,8 +144,6 @@ class _CollectionFullState extends State<CollectionFull> {
                                                               foodList.add(stableList[i]);
                                                             });
                                                           }
-                                                          print(foodList.toString()+stableList[i].contains(rechercheController.text).toString());
-                                                          print(rechercheController.text);
 
                                                         }
                                                       });
@@ -161,7 +154,7 @@ class _CollectionFullState extends State<CollectionFull> {
                                                     ),
                                                   ), // icon is 48px widget.
                                                 ),
-                                                suffixIcon: Padding(
+                                                suffixIcon: inSeach? Padding(
                                                   padding: EdgeInsets.all(0.0),
                                                   child:GestureDetector(
                                                     onTap: (){
@@ -175,7 +168,8 @@ class _CollectionFullState extends State<CollectionFull> {
                                                       color: Colors.grey,
                                                     ),
                                                   ), // icon is 48px widget.
-                                                ),
+                                                ):
+                                                Container(width: 0,height: 0,),
                                                 labelText: 'Trouver votre plaisir',
                                                 labelStyle: TextStyle(fontSize: 20.0,color: Colors.grey)),
                                             onTap: (){
@@ -188,8 +182,6 @@ class _CollectionFullState extends State<CollectionFull> {
                                                     foodList = [];
                                                     for(int i=0; i<stableList.length; i++)
                                                     {
-                                                      print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-
 
                                                       if(stableList[i].toLowerCase().contains(rechercheController.text.toLowerCase()))
                                                       {
@@ -197,8 +189,6 @@ class _CollectionFullState extends State<CollectionFull> {
                                                           foodList.add(stableList[i]);
                                                         });
                                                       }
-                                                      print(foodList.toString()+stableList[i].contains(rechercheController.text).toString());
-                                                      print(rechercheController.text);
 
                                                     }
                                               });
@@ -250,7 +240,7 @@ class _CollectionFullState extends State<CollectionFull> {
                                                         :Text(
                                                           'Aucune collections ne correspond a cette recherche',
                                                           style: TextStyle(
-                                                              fontSize: 10,fontStyle: FontStyle.italic, fontWeight: FontWeight.w600),
+                                                              fontSize: 10,fontStyle: FontStyle.italic,color: Colors.grey ,fontWeight: FontWeight.w600),
                                                         );
                                                       }),
                                             ),
@@ -342,7 +332,7 @@ class _CollectionFullState extends State<CollectionFull> {
                                              arguments: servs
                                          );
                                        },
-                                      child: Icon(Icons.trending_flat,color: Colors.orange,size: 20,),
+                                      child: Icon(Icons.trending_flat,color: Color.fromRGBO(202, 115, 64, 1),size: 20,),
                                      )
                                    ],
                                  ),
@@ -390,10 +380,10 @@ class _CollectionFullState extends State<CollectionFull> {
             children: [
               Text(data[i].name,style: TextStyle(
                 fontSize: 15,
-                color: etats[i] ? Colors.orange:Colors.grey
+                color: etats[i] ? Color.fromRGBO(202, 115, 64, 1):Color.fromRGBO(82, 92, 113, 1)
               ),),
               SizedBox(height: 5,),
-              etats[i] ? Icon(Icons.circle,color: Colors.orange,size: 6,): Container(width: 0,height: 0,)
+              etats[i] ? Icon(Icons.circle,color: Color.fromRGBO(202, 115, 64, 1),size: 6,): Container(width: 0,height: 0,)
             ]
           ),
         onTap:(){
@@ -449,19 +439,21 @@ class _CollectionFullState extends State<CollectionFull> {
                           right: 0,
                           child:Container(
                             decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.8),
+                            //  color: Color.fromRGBO(15, 18, 25, 1),// Color.fromRGBO(82, 92, 113, 1),
+                              //gradient: gard,
+                              color: Colors.black54,
                               borderRadius:BorderRadius.only(
-                                bottomLeft: Radius.circular(40),
-                                topRight: Radius.circular(40),
+                                bottomLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
                                      ),
 
                             ),
-                          child: Padding(padding: EdgeInsets.all(5),
+                          child: Padding(padding: EdgeInsets.only(top: 2,bottom: 2,left: 15,right: 15),
                             child: Row(
                               children: [
-                                Icon(Icons.star,color: Colors.orange,size: 10,),
-                                SizedBox(width: 15,),
-                                Text("4,5",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 8),),
+                                Icon(Icons.star,color: Color.fromRGBO(202, 115, 64, 1),size: 13,),
+                                SizedBox(width: 2,),
+                                Text(createNote(data[i].avis),style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 13),),
 
                               ],
                             ),
@@ -477,13 +469,13 @@ class _CollectionFullState extends State<CollectionFull> {
                       children: [
                         SizedBox(height: 5,),
                         Text(data[i].name,
-                          style: TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.w400),
                         ),
                         SizedBox(height: 5,),
                         Text(data[i].tags[0].name,
                           style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white),
+                              fontSize: 10,
+                              color: Colors.grey),
                         ),
                         SizedBox(height: 10,),
                         Row(
@@ -495,7 +487,7 @@ class _CollectionFullState extends State<CollectionFull> {
                                   style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
                                 ),
                                 Text("F.CFA".toString(),
-                                  style: TextStyle(color: Colors.orangeAccent,fontWeight: FontWeight.bold),
+                                  style: TextStyle(color: Color.fromRGBO(202, 115, 64, 1),fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -541,29 +533,39 @@ class _CollectionFullState extends State<CollectionFull> {
         BottomNavigationBarItem(
         icon: Icon(Icons.home),
         label: '',
-        backgroundColor: Colors.white10,
+        backgroundColor: Color.fromRGBO(82, 92, 113, 0.3)//Colors.white10,
         ),
         BottomNavigationBarItem(
         icon: Icon(Icons.shopping_bag),
         label: '',
-        backgroundColor: Colors.white10,
+        backgroundColor:  Color.fromRGBO(82, 92, 113, 0.3)//Colors.white10,
         ),
         BottomNavigationBarItem(
         icon: Icon(Icons.favorite),
         label: '',
-        backgroundColor: Colors.white10,
+        backgroundColor: Color.fromRGBO(82, 92, 113, 0.3)//Colors.white10,
         ),
         BottomNavigationBarItem(
         icon: Icon(Icons.notifications),
         label: '',
-        backgroundColor:Color.fromRGBO(12, 15, 20, 1),
+            backgroundColor: Color.fromRGBO(82, 92, 113, 0.3)//Colors.white10,
         ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Color.fromRGBO(202, 115, 64, 1),
-        unselectedItemColor: Colors.grey,
+        unselectedItemColor:Colors.grey,
         onTap: _onItemTapped,
     );
   }
-
+    String createNote(List<Avis >avis){
+      String note = '';
+      double notes = 0;
+      for(int i = 0;i<avis.length;i++){
+        notes = notes + avis[i].note;
+      }
+      if(avis.length>0) notes = notes/avis.length;
+      note = notes.toStringAsPrecision(1);
+      note = note.split('.').length >1? note.split('.')[0]  + ','+note.split('.')[1] : note;
+      return note;
+    }
 }

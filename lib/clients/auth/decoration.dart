@@ -6,7 +6,9 @@ var textInputDecoration = InputDecoration(
   fillColor: Color.fromRGBO(44, 51,61, 1),
   filled: true,
   hintStyle: TextStyle(
-    color: Colors.blueGrey
+    color: Colors.blueGrey,
+        fontSize: 13,
+        fontWeight: FontWeight.normal
   ),
   disabledBorder:OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
