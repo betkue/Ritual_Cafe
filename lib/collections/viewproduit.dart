@@ -65,91 +65,103 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
       backgroundColor: Colors.black,
       body: Padding(
         padding: const EdgeInsets.all(15),
-        child: ListView(
+        child: Column(
           children: [
-            Container(
-              height:width,
-              width: width,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(produit.medias[0].link),
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(20.0)
-                ),
-              ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: 20,
-                    left: 10,
-                    child: Container(
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height:width,
+                      width: width,
                       decoration: BoxDecoration(
-                        color: Colors.black45,
-                        borderRadius: BorderRadius.all(Radius.circular(10.0),
+                        image: DecorationImage(
+                          image: NetworkImage(produit.medias[0].link),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)
                         ),
                       ),
-                      width: 30,
-                      height: 30,
-                      child: IconButton(
-                          color: Colors.black,
-                          icon: Icon(Icons.arrow_back_ios, color: Colors.grey,size: 15,),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                    ),
-                    ),
-                  Positioned(
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: width,
-                        decoration: BoxDecoration(
-                          color: Colors.brown.withOpacity(0.8),
-                          borderRadius: BorderRadius.all(Radius.circular(20.0),),
-                        ),
-                  //    ),
-                      child: Padding(padding: EdgeInsets.all(10),
-                      child:  Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Stack(
                         children: [
-                          Text(produit.name,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),),
-                          SizedBox(height: 15,),
-                          Text(produit.tags[0].name,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 12),),
-                          SizedBox(height: 15,),
-                          Row(
-                            children: [
-                              Icon(Icons.star,color: Colors.orange,),
-                              SizedBox(width: 15,),
-                              Text(createNote(produit.avis),style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),),
-                              SizedBox(width: 15,),
-                              Text("("+produit.avis.length.toString()+")",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),),
-                            ],
+                          Positioned(
+                            top: 20,
+                            left: 10,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black45,
+                                borderRadius: BorderRadius.all(Radius.circular(10.0),
+                                ),
+                              ),
+                              width: 30,
+                              height: 30,
+                              child: IconButton(
+                                color: Colors.black,
+                                icon: Icon(Icons.arrow_back_ios, color: Colors.grey,size: 15,),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 0,
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              width: width,
+                              decoration: BoxDecoration(
+                                color: Colors.brown.withOpacity(0.8),
+                                borderRadius: BorderRadius.all(Radius.circular(20.0),),
+                              ),
+                              //    ),
+                              child: Padding(padding: EdgeInsets.all(10),
+                                child:  Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(produit.name,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 23),),
+                                    SizedBox(height: 8,),
+                                    Text(produit.tags[0].name,style: TextStyle(color: Colors.white60,fontWeight: FontWeight.normal,fontSize: 14),),
+                                    SizedBox(height: 8,),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+
+                                        Icon(Icons.star,color:  Color.fromRGBO(202, 115, 64, 1),size: 22,),
+                                        SizedBox(width: 8,),
+                                        Text(createNote(produit.avis),style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 22),),
+                                        SizedBox(width: 8,),
+                                        Text("("+produit.avis.length.toString()+")",style: TextStyle(color: Colors.white60,fontWeight: FontWeight.normal,fontSize: 12),),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
+                    ),
+                    SizedBox(height: 15,),
+                    Text('Description',
+                      style: TextStyle(color: Colors.grey,fontSize: 15),),
+                    SizedBox(height: 15,),
+                    produit.description !=null?
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: lirePlus? grandeDescription(produit.description.split('<p>')[1].split(';')):
+                      petiteDescription(produit.description.split('<p>')[1].split(';')),
+                    )
+                        :
+                    Container(width: 0,height: 0,),
+                    Padding(padding: EdgeInsets.only(top: 10,bottom: 10),
+                      child: Column(
+                        children: chowVarriantes(produit.variants,width-100,produit.price),
                       ),
                     ),
-                  ),
-                ],
+
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 15,),
-            Text('Description',
-              style: TextStyle(color: Colors.grey,fontSize: 15),),
-            SizedBox(height: 15,),
-            produit.description !=null?
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: lirePlus? grandeDescription(produit.description.split('<p>')[1].split(';')):
-              petiteDescription(produit.description.split('<p>')[1].split(';')),
-            )
-                :
-            Container(width: 0,height: 0,),
-            Padding(padding: EdgeInsets.only(top: 10,bottom: 10),
-            child: Column(
-              children: chowVarriantes(produit.variants,width-100,produit.price),
-            ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -162,9 +174,9 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                     Row(
                       children: [
                         Text((price !=0?price+priceadd:produit.price+priceadd).toString(),
-                            style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
+                          style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
                         Text(" F.CFA",
-                          style: TextStyle(color: Colors.orangeAccent,fontSize: 20,fontWeight: FontWeight.bold),),
+                          style: TextStyle(color:  Color.fromRGBO(202, 115, 64, 1),fontSize: 20,fontWeight: FontWeight.bold),),
                       ],
                     ),
                   ],
@@ -172,19 +184,18 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                 Container(
                   width: width-140,
                   decoration: BoxDecoration(
-                    color: Colors.orangeAccent,
+                    color:  Color.fromRGBO(202, 115, 64, 1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(5),
                     child: Text("Acheter Maintenant",textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white,fontSize: 20),
+                      style: TextStyle(color: Colors.white,fontSize: 20),
                     ),
                   ),
                 )
               ],
-            )
-
+            ),
           ],
         ),
       ),
@@ -213,7 +224,7 @@ List<Widget>grandeDescription(List<String> a){
                         lirePlus = false;
                       });
                     },
-                    child: Text('... moins',style: TextStyle(color: Colors.orange),),
+                    child: Text('... moins',style: TextStyle(color:   Color.fromRGBO(202, 115, 64, 1)),),
                   ))
               ,
             ],
