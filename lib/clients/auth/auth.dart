@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:ritual_cafe/models/response.dart';
 import 'package:ritual_cafe/models/user.dart';
 import 'package:ritual_cafe/services/services.dart';
@@ -14,7 +13,7 @@ class Auth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (create)=>Services(UserBdd("","")),
+    return ChangeNotifierProvider.value(value:Services(UserBdd("","")),
     child: AuthFull(),
     );
   }
@@ -128,6 +127,7 @@ class _AuthFullState extends State<AuthFull> {
               !servs.login? GestureDetector(
                   onTap:() async{
                     if (formKey.currentState.validate()) {
+                      formKey.currentState.save();
                       servs.send  = true;
                       List<String> nomprenom = nomController.text.split(' ');
                       User user = User(nomprenom[1], nomprenom[0], mailController.text, passController.text,phoneController.text);
@@ -340,6 +340,7 @@ class _AuthFullState extends State<AuthFull> {
           inputDecoration: textInputDecoration.copyWith(hintText: 'Phone',),
           onSaved: (PhoneNumber number) {
             print('On Saved: $number');
+            phoneController.text = number.toString();
           },
         ),
       ),

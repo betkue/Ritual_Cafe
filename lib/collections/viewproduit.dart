@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ritual_cafe/models/commande.dart';
 import 'package:ritual_cafe/models/json/collectionjson.dart';
 import 'package:ritual_cafe/models/optionParameter.dart';
 import 'package:ritual_cafe/services/services.dart';
@@ -12,7 +14,7 @@ class ViewProduit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (create)=>serv,
+    return ChangeNotifierProvider.value(value:this.serv,
     child:ViewProduitFull(serv) ,
     );
   }
@@ -51,10 +53,93 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
   }
   int priceadd = 0;
   int price = 0;
+  int nombre = 1;
   bool lirePlus = false;
   List<bool> viewVariant = [];
-  List<bool> requiredVarriant = [];
+  List<bool> viewAlert = [];
+  List<int> requiredVarriant = [];
+  List<bool> etatRequiredVarriant =[];
   List<OptionParameter> optionsParameters = [];
+  void addCommande(Services servs){
+    
+   var produit = widget.serv.collections.data[widget.serv.indexCollection].produits[widget.serv.indexProduit] ;
+    
+    int prix = price !=0?(price+priceadd)*nombre:(produit.price+priceadd)*nombre;
+
+    List<VarrianteValue> v = [];
+    for(var i = 0; i < produit.variants.length ;i++) {
+      bool choisi = false;
+      Variants variante = produit.variants[i];
+      String value = "";
+      List<OptionalValue> options = [];
+              for (var y = 0; y < optionsParameters[i].optionValue.length; y++)
+              {
+                if ( optionsParameters[i].optionValue[y]) {
+                  options.add(new OptionalValue(variante.name, true))  ;
+                  value = value + variante.options[y].name ;
+                  choisi =true;
+                }
+                else{
+                  
+                  options.add(new OptionalValue(variante.name, false))  ;
+                }
+                print(options);
+              }
+        v.add(new VarrianteValue(variante.name,options,value, choisi));
+        
+    }
+    Commande commande = new Commande(produit.id, servs.indexCollection, produit.tags[0].name,produit.name, produit.medias[0].link, nombre, price,priceadd,prix ,v);
+    
+    servs.total = servs.total + prix;
+    servs.commande = commande;
+    Navigator.of(context).pushNamedAndRemoveUntil('/pagner',(Route<dynamic> route) => false,arguments: widget.serv);
+  }
+  void valider(Services servs){
+    bool valid = true;
+     var produit = widget.serv.collections.data[widget.serv.indexCollection].produits[widget.serv.indexProduit] ;
+    for (var i = 0; i < optionsParameters.length ;i++) {
+      if(requiredVarriant.contains(i))
+      {
+            setState(() {
+              etatRequiredVarriant[i] = false;
+            });
+        for (var y = 0; y < optionsParameters[i].optionValue.length; y++)
+        {
+           if ( optionsParameters[i].optionValue[y]) {
+             setState(() {
+               etatRequiredVarriant[i] = true;
+             });
+           }
+        }
+      }
+      
+      
+    }
+    for (var i = 0; i < etatRequiredVarriant.length; i++) {
+        if (requiredVarriant.contains(i) ) {
+          if (!etatRequiredVarriant[i]) {
+            setState(() {
+              valid = false;
+              viewAlert[i] = true;
+              print("***************************affiche****************************************");
+            });
+          }
+          else
+          {
+            setState(() {
+              viewAlert[i] = false;
+              print("**************************cache*************************************************");
+            });
+          }
+          
+        }
+      
+    }
+    if(valid){
+        addCommande(servs);
+    }
+    
+  }
   @override
   Widget build(BuildContext context) {
    var produit = widget.serv.collections.data[widget.serv.indexCollection].produits[widget.serv.indexProduit] ;
@@ -163,37 +248,86 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
               children: [
-                Column(
+                Text("Nombre",style: TextStyle(color: Colors.white30,fontSize: 20,fontWeight: FontWeight.bold),),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text("Prix",
-                      style: TextStyle(color: Colors.grey),),
-                    SizedBox(height: 5,),
-                    Row(
-                      children: [
-                        Text((price !=0?price+priceadd:produit.price+priceadd).toString(),
-                          style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
-                        Text(" F.CFA",
-                          style: TextStyle(color:  Color.fromRGBO(202, 115, 64, 1),fontSize: 20,fontWeight: FontWeight.bold),),
-                      ],
+                    GestureDetector(
+                      onTap:(){
+                       if (nombre > 1) setState(() {
+                        nombre--;
+                         print(nombre);
+                         });
+                      },
+                      child: Container(
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                        color:  Color.fromRGBO(202, 115, 64, 1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                        child: Icon(Icons.remove,size: 12,color: Colors.white,),
+                      ),
                     ),
+                    Text(nombre.toString(),style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold),),
+                    GestureDetector(
+                      onTap: (){
+                        setState(() {
+                          nombre++;
+                        });
+                        print(nombre);
+                      },
+                      child: Container(
+                        
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                        color:  Color.fromRGBO(202, 115, 64, 1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                        child: Icon(Icons.add,size: 12,color: Colors.white,)),
+                    )
                   ],
                 ),
-                Container(
-                  width: width-140,
-                  decoration: BoxDecoration(
-                    color:  Color.fromRGBO(202, 115, 64, 1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Text("Acheter Maintenant",textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white,fontSize: 20),
+                SizedBox(height: 20,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Text("Prix",
+                          style: TextStyle(color: Colors.grey),),
+                        SizedBox(height: 5,),
+                        Row(
+                          children: [
+                            Text((price !=0?(price+priceadd)*nombre:(produit.price+priceadd)*nombre).toString(),
+                              style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
+                            Text(" F.CFA",
+                              style: TextStyle(color:  Color.fromRGBO(202, 115, 64, 1),fontSize: 20,fontWeight: FontWeight.bold),),
+                          ],
+                        ),
+                      ],
                     ),
-                  ),
-                )
+                    GestureDetector(
+                      onTap: (){valider(widget.serv);},
+                      child: Container(
+                      width: width-140,
+                      decoration: BoxDecoration(
+                        color:  Color.fromRGBO(202, 115, 64, 1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Text("Ajouter Au Pagner",textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white,fontSize: 20),
+                        ),
+                      ),
+                    ),
+                    )
+                  ],
+                ),
               ],
             ),
           ],
@@ -301,8 +435,12 @@ List<Widget>grandeDescription(List<String> a){
     for(int i = 0; i <varriantes.length;i++)
     {
       viewVariant.add(false);
+       viewAlert.add(false);
       optionsParameters.add(OptionParameter(varriantes[i].maxChoices, [],0));
-      varriantes[i].required ? requiredVarriant.add(false):requiredVarriant.add(true);
+        etatRequiredVarriant.add(false);
+      if(varriantes[i].required ) {
+        requiredVarriant.add(i);
+      }
       for(int y = 0; y<varriantes[i].options.length;y++){
         optionsParameters[i].optionValue.add(false);
         if(varriantes[i].options[y].price >0)priceChange = true;
@@ -359,9 +497,17 @@ List<Widget>grandeDescription(List<String> a){
                                               style: TextStyle(color: Colors.red),
                                             ):
                                             Text(
+                                              "  ",
+                                              style: TextStyle(color: Colors.white38),
+                                            ),
+                                            varriantes[indexFirst].required && viewAlert[indexFirst] ? Text(
+                                              " Ce champ est obligatoire",
+                                              style: TextStyle(color: Colors.red),
+                                            ):
+                                            Text(
                                               "",
                                               style: TextStyle(color: Colors.white38),
-                                            )
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -512,7 +658,15 @@ List<Widget>grandeDescription(List<String> a){
                                             Text(
                                               "",
                                               style: TextStyle(color: Colors.white38),
-                                            )
+                                            ),
+                                            varriantes[i].required && viewAlert[i] ? Text(
+                                              "  Ce champ est obligatoire",
+                                              style: TextStyle(color: Colors.red),
+                                            ):
+                                            Text(
+                                              "",
+                                              style: TextStyle(color: Colors.white38),
+                                            ),
                                           ],
                                         ),
                                       ),

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ritual_cafe/bdd/bdd.dart';
+import 'package:ritual_cafe/models/commande.dart';
 import 'package:ritual_cafe/models/json/collectionjson.dart';
 import 'package:ritual_cafe/models/json/errorconnexion.dart';
 import 'package:ritual_cafe/models/json/errorlogin.dart';
@@ -68,6 +69,34 @@ class Services with ChangeNotifier {
   get collections => _collection;
   set collections (CollectionsJson a){
     _collection = a;
+    notifyListeners();
+  }
+  //Total
+  int _total = 0;
+  
+  get total => _total;
+  set total (int a){
+    _total = a;
+    notifyListeners();
+  }
+//Commandes
+List<Commande> _commandes = [];
+
+  get commande => _commandes;
+  set commande (Commande a){
+    _commandes.add(a);
+    notifyListeners();
+  }
+  //delete commande
+  deleteCommande(int i){
+    _total = _total - _commandes[i].prixTotal;
+    _commandes.removeAt(i);
+    print(_commandes);
+    notifyListeners();
+  }
+  //update
+  updateCommande(int i,Commande a){
+    _commandes[i] = a ;
     notifyListeners();
   }
   //connexion

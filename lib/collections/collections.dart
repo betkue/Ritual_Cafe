@@ -16,7 +16,7 @@ class Collections extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (create)=>Services(serv.user),
+    return ChangeNotifierProvider.value(value:this.serv,
       child:CollectionFull(serv) ,
     );
   }
