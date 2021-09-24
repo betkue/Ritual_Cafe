@@ -291,6 +291,7 @@ class _PagnerFullState extends State<PagnerFull> {
 
       ) ;
       l.add(a);
+      l.add(height:10);
     }
       /*
                 ListTile(
