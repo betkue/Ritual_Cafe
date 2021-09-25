@@ -1,6 +1,7 @@
 class Commande {
   int id;
   int indexCollection;
+  int indexProduit;
   String nom;
   String image;
   List<VarrianteValue> varriantes;
@@ -9,7 +10,7 @@ class Commande {
   int nombre;
   int prixTotal;
   String tag;
-  Commande(this.id,this.indexCollection,this.tag,this.nom,this.image,this.nombre,this.price,this.priceadd,this.prixTotal,this.varriantes);
+  Commande(this.id,this.indexCollection,this.indexProduit,this.tag,this.nom,this.image,this.nombre,this.price,this.priceadd,this.prixTotal,this.varriantes);
 }
 class OptionalValue{
   String nom;
@@ -20,7 +21,8 @@ class VarrianteValue {
   String nom;
   bool choisi;
   String value;
+  int nbrChoce;
   List<OptionalValue> options;
-  VarrianteValue(this.nom,this.options,this.value,this.choisi);
+  VarrianteValue(this.nom,this.options,this.value,this.choisi,this.nbrChoce);
 
 }

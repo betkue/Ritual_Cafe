@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ritual_cafe/collections/colors.dart';
 import 'package:ritual_cafe/models/response.dart';
 import 'package:ritual_cafe/models/user.dart';
 import 'package:ritual_cafe/services/services.dart';
@@ -34,14 +35,14 @@ class _AuthFullState extends State<AuthFull> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(a, textAlign: TextAlign.center,
-            style: new TextStyle(color: Colors.white),
+            style: new TextStyle(color: principalTextColor),
           ),
           SizedBox(width: 20),
           b
 
         ],
       ),
-      backgroundColor: Colors.black54,);
+      backgroundColor: containerPrixProduitPanierColor,);
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
   final formKey = GlobalKey<FormState>();
@@ -86,21 +87,21 @@ class _AuthFullState extends State<AuthFull> {
     return Consumer<Services>(
         builder: (context,servs,_)=>
       Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: arrowBackColor,
         body: servs.send ? Loadding(): ListView(
           children: [
             SizedBox(height: 15,),
             Text( "Ritual Café",//"Ritual Café"
               textAlign: TextAlign.center,
               style: TextStyle(
-              color: Color.fromRGBO(202, 115, 64, 1),
+              color: primaryColor,
               fontWeight: FontWeight.bold,
               fontSize: 38
             ),),
             Text(servs.login?"Connexion":"Inscription",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.white,
+                    color: principalTextColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 30
                 )),
@@ -139,7 +140,7 @@ class _AuthFullState extends State<AuthFull> {
                       if(result.etat)
                       {
                         snack(result.message,
-                            Icon(Icons.check, color: Colors.green,));
+                            Icon(Icons.check, color: validerColor,));
                         Navigator.of(context).pushNamedAndRemoveUntil('/',(Route<dynamic> route) => false);
 
                       }
@@ -149,7 +150,7 @@ class _AuthFullState extends State<AuthFull> {
                           error =result.message;
                         });
                         snack(result.message,
-                            Icon(Icons.details, color: Colors.red,));
+                            Icon(Icons.details, color: errorTextColor,));
                       }
 
                       servs.send  = false;
@@ -158,14 +159,14 @@ class _AuthFullState extends State<AuthFull> {
                   child:Container(
                     width: width,
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(202, 115, 64, 1),
+                      color: primaryColor,
                       borderRadius: BorderRadius.circular(15),
 
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(10) ,
                       child: Text("Créer un compte",textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white)
+                        style: TextStyle(color:principalTextColor)
                         ,),
                     ),
                   ) ,
@@ -185,7 +186,7 @@ class _AuthFullState extends State<AuthFull> {
                     {
 
                       snack(result.message,
-                          Icon(Icons.check, color: Colors.green,));
+                          Icon(Icons.check, color: validerColor,));
                       Navigator.of(context).pushNamedAndRemoveUntil('/',
                               (Route<dynamic> route) => false);
 
@@ -197,7 +198,7 @@ class _AuthFullState extends State<AuthFull> {
                         error =result.message;
                       });
 
-                      snack(result.message, Icon(Icons.details, color: Colors.red,));
+                      snack(result.message, Icon(Icons.details, color: errorTextColor,));
 
                     }
 
@@ -209,14 +210,14 @@ class _AuthFullState extends State<AuthFull> {
                 child: Container(
                   width: width,
                   decoration: BoxDecoration(
-                    color: Color.fromRGBO(202, 115, 64, 1),
+                    color: primaryColor,
                     borderRadius: BorderRadius.circular(15),
 
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: Text("Connexion",textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white)),
+                        style: TextStyle(color: principalTextColor)),
                   ),
                 ) ,
               )
@@ -229,14 +230,14 @@ class _AuthFullState extends State<AuthFull> {
               child: Container(
                 width: width,
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(44, 51,61, 1),
+                  color: choiceColor,
                   borderRadius: BorderRadius.circular(15),
 
                 ),
                 child: Padding(
                   padding: EdgeInsets.all(10) ,
                   child: Text( servs.login? "Creer un compte" : "Connexion",textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white)
+                    style: TextStyle(color: principalTextColor)
                     ,),
                 ),
               ) ,
@@ -255,7 +256,7 @@ class _AuthFullState extends State<AuthFull> {
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text("Prénom & Nom",textAlign: TextAlign.start,
-          style: TextStyle(color: Colors.white,fontSize: 15,
+          style: TextStyle(color: principalTextColor,fontSize: 15,
           ),),
       ),
       Padding(
@@ -263,11 +264,11 @@ class _AuthFullState extends State<AuthFull> {
             top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
         child:
         TextFormField(
-          cursorColor: Colors.white,
+          cursorColor: principalTextColor,
           keyboardType: TextInputType.text,
           controller: nomController,
           style:TextStyle(
-              color: Colors.white,
+              color: principalTextColor,
               fontWeight: FontWeight.bold
           ),
           decoration:textInputDecoration.copyWith(hintText: 'Nom Prenom'),
@@ -283,18 +284,18 @@ class _AuthFullState extends State<AuthFull> {
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text("Email",textAlign: TextAlign.start,
-          style: TextStyle(color: Colors.white,fontSize: 15,
+          style: TextStyle(color: principalTextColor,fontSize: 15,
           ),),
       ),
       Padding(
         padding: const EdgeInsets.only(
             top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
         child: TextFormField(
-          cursorColor: Colors.white,
+          cursorColor: principalTextColor,
           keyboardType: TextInputType.emailAddress,
           controller: mailController,
           style:TextStyle(
-              color: Colors.white,
+              color: principalTextColor,
               fontWeight: FontWeight.bold
           ),
           decoration:textInputDecoration.copyWith(hintText: 'Adresse mail'),
@@ -309,7 +310,7 @@ class _AuthFullState extends State<AuthFull> {
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text("Numéro de tel",textAlign: TextAlign.start,
-          style: TextStyle(color: Colors.white,fontSize: 15,
+          style: TextStyle(color: principalTextColor,fontSize: 15,
           ),),
       ),
       Padding(
@@ -326,16 +327,16 @@ class _AuthFullState extends State<AuthFull> {
           ),
           ignoreBlank: false,
           autoValidateMode: AutovalidateMode.disabled,
-          selectorTextStyle: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+          selectorTextStyle: TextStyle(color: principalTextColor,fontWeight: FontWeight.bold),
           initialValue: number,
-          cursorColor: Colors.white,
+          cursorColor: principalTextColor,
           textFieldController: phoneController,
-          textStyle: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+          textStyle: TextStyle(color: principalTextColor,fontWeight: FontWeight.bold),
           formatInput: true,
           keyboardType:TextInputType.numberWithOptions(signed: true, decimal: true),
           inputBorder: OutlineInputBorder(
 
-              borderSide: BorderSide(color: Colors.grey,width: 1),
+              borderSide: BorderSide(color: secondaryTextColor,width: 1),
               borderRadius:BorderRadius.all(Radius.circular(10.0))),
           inputDecoration: textInputDecoration.copyWith(hintText: 'Phone',),
           onSaved: (PhoneNumber number) {
@@ -348,18 +349,18 @@ class _AuthFullState extends State<AuthFull> {
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text("Mot de passe",textAlign: TextAlign.start,
-          style: TextStyle(color: Colors.white,fontSize: 15,
+          style: TextStyle(color: principalTextColor,fontSize: 15,
           ),),
       ),
       Padding(
         padding: const EdgeInsets.only(
             top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
         child: TextFormField(
-          cursorColor: Colors.white,
+          cursorColor: principalTextColor,
           controller: passController,
           obscureText: noView,
           style:TextStyle(
-              color: Colors.white,
+              color: principalTextColor,
               fontWeight: FontWeight.bold
           ),
           decoration:textInputDecoration.copyWith(hintText: 'Mot de passe'),
@@ -375,7 +376,7 @@ class _AuthFullState extends State<AuthFull> {
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text(error,textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.red,
+          style: TextStyle(color: errorTextColor,
           ),),
       ),
 
@@ -389,18 +390,18 @@ class _AuthFullState extends State<AuthFull> {
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text("Email",textAlign: TextAlign.start,
-          style: TextStyle(color: Colors.white,fontSize: 15,
+          style: TextStyle(color: principalTextColor,fontSize: 15,
           ),),
       ),
       Padding(
         padding: const EdgeInsets.only(
             top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
         child: TextFormField(
-          cursorColor: Colors.white,
+          cursorColor: principalTextColor,
           keyboardType: TextInputType.emailAddress,
           controller: mailController,
           style:TextStyle(
-              color: Colors.white,
+              color: principalTextColor,
               fontWeight: FontWeight.bold
           ),
           decoration:textInputDecoration.copyWith(hintText: 'Adresse mail'),
@@ -416,18 +417,18 @@ class _AuthFullState extends State<AuthFull> {
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text("Mot de passe",textAlign: TextAlign.start,
-          style: TextStyle(color: Colors.white,fontSize: 15,
+          style: TextStyle(color: principalTextColor,fontSize: 15,
           ),),
       ),
       Padding(
         padding: const EdgeInsets.only(
             top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
         child: TextFormField(
-          cursorColor: Colors.white,
+          cursorColor: principalTextColor,
           controller: passController,
           obscureText: noView,
           style:TextStyle(
-              color: Colors.white,
+              color: principalTextColor,
               fontWeight: FontWeight.bold
           ),
           decoration:textInputDecoration.copyWith(hintText: 'Mot de passe'),
@@ -443,7 +444,7 @@ class _AuthFullState extends State<AuthFull> {
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text(error,textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.red,
+          style: TextStyle(color: principalTextColor,
           ),),
       ),
     ];
@@ -452,7 +453,7 @@ class _AuthFullState extends State<AuthFull> {
 }
 
 /*CountryCodePicker(
-                  textStyle: TextStyle(color: Colors.white),
+                  textStyle: TextStyle(color: principalTextColor),
                   onChanged: _telChange,
                   // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
                   initialSelection: 'CM',

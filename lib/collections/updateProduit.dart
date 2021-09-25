@@ -9,26 +9,26 @@ import 'package:ritual_cafe/services/services.dart';
 import 'ExpandedListAnimationWidget.dart';
 import 'Scrollbar.dart';
 
-class ViewProduit extends StatelessWidget {
+class UpdateProduit extends StatelessWidget {
   Services serv;
- ViewProduit(this.serv);
+ UpdateProduit(this.serv);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(value:this.serv,
-    child:ViewProduitFull(serv) ,
+    child:UpdateProduitFull(serv) ,
     );
   }
 }
-class ViewProduitFull extends StatefulWidget {
+class UpdateProduitFull extends StatefulWidget {
   Services serv;
-   ViewProduitFull(this.serv);
+   UpdateProduitFull(this.serv);
 
   @override
-  _ViewProduitFullState createState() => _ViewProduitFullState();
+  _UpdateProduitFullState createState() => _UpdateProduitFullState();
 }
 
-class _ViewProduitFullState extends State<ViewProduitFull> {
+class _UpdateProduitFullState extends State<UpdateProduitFull> {
   void snack(String a,double width) {
     SnackBar snackbar =  SnackBar(
       content:
@@ -54,7 +54,8 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
   }
   int priceadd = 0;
   int price = 0;
-  int nombre = 1;
+  int lastTotalPrice = 0;
+  int nombre = 0;
   bool lirePlus = false;
   List<bool> viewVariant = [];
   List<bool> viewAlert = [];
@@ -63,19 +64,22 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
   List<OptionParameter> optionsParameters = [];
   void addCommande(Services servs){
     
-   var produit = widget.serv.collections.data[widget.serv.indexCollection].produits[widget.serv.indexProduit] ;
+   var produit = widget.serv.collections.data[widget.serv.commande[widget.serv.indexCommande].indexCollection].produits[widget.serv.commande[widget.serv.indexCommande].indexProduit] ;
+  
+    Commande commande = widget.serv.commande[widget.serv.indexCommande];
     
-    int prix = price !=0?(price+priceadd)*nombre:(produit.price+priceadd)*nombre;
-
+    int prix = price !=0?(price+priceadd+commande.priceadd)*(nombre + commande.nombre):(produit.price+priceadd+commande.priceadd)*(nombre + commande.nombre);
+  
     List<VarrianteValue> v = [];
     for(var i = 0; i < produit.variants.length ;i++) {
+     
       bool choisi = false;
       Variants variante = produit.variants[i];
       String value = "";
-      int nbr =0;
+      int nbr = 0;
       List<OptionalValue> options = [];
               for (var y = 0; y < variante.options.length; y++)
-              {
+              { 
                 if ( optionsParameters[i].optionValue[y]) {
                   nbr++;
                   options.add(new OptionalValue(variante.name, true))  ;
@@ -86,7 +90,8 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                   else{
                    value = value +comma+ variante.options[y].name ;
                   }
-                  choisi =true;
+                  print(value);
+                 // choisi =true;
                 }
                 else{
                   
@@ -95,18 +100,24 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                 print(options);
               }
         v.add(new VarrianteValue(variante.name,options,value, choisi,nbr));
+         
         
     }
-    Commande commande = new Commande(produit.id, servs.indexCollection,servs.indexProduit, produit.tags[0].name,produit.name, produit.medias[0].link, nombre, price,priceadd,prix ,v);
     
-    servs.total = servs.total + prix;
-    servs.commande = commande;
+    Commande commandeUpdated = new Commande(produit.id, servs.commande[servs.indexCommande].indexCollection, servs.commande[servs.indexCommande].indexProduit, produit.tags[0].name,produit.name, produit.medias[0].link, nombre+ commande.nombre, price,priceadd+commande.priceadd,prix ,v);
+    
+    servs.total = servs.total - commande.prixTotal+ prix;
+    servs.updateCommande(servs.indexCommande,commandeUpdated );
+    
     Navigator.of(context).pushNamedAndRemoveUntil('/pagner',(Route<dynamic> route) => false,arguments: widget.serv);
+    
   }
   void valider(Services servs){
     bool valid = true;
-     var produit = widget.serv.collections.data[widget.serv.indexCollection].produits[widget.serv.indexProduit] ;
-    for (var i = 0; i < produit.variants.length  ;i++) {
+     
+   var produit = widget.serv.collections.data[widget.serv.commande[widget.serv.indexCommande].indexCollection].produits[widget.serv.commande[widget.serv.indexCommande].indexProduit] ;
+  
+    for (var i = 0; i < produit.variants.length ;i++) {
       
       Variants variante = produit.variants[i];
       if(requiredVarriant.contains(i))
@@ -153,7 +164,8 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
   }
   @override
   Widget build(BuildContext context) {
-   var produit = widget.serv.collections.data[widget.serv.indexCollection].produits[widget.serv.indexProduit] ;
+    Commande commande = widget.serv.commande[widget.serv.indexCommande];
+   var produit = widget.serv.collections.data[widget.serv.commande[widget.serv.indexCommande].indexCollection].produits[widget.serv.commande[widget.serv.indexCommande].indexProduit] ;
     //price = produit.price;
 
    double width = MediaQuery .of(context).size.width;
@@ -267,7 +279,7 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                   children: [
                     GestureDetector(
                       onTap:(){
-                       if (nombre > 1) setState(() {
+                       if (nombre + commande.nombre > 1) setState(() {
                         nombre--;
                          print(nombre);
                          });
@@ -282,7 +294,7 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                         child: Icon(Icons.remove,size: 12,color: principalTextColor,),
                       ),
                     ),
-                    Text(nombre.toString(),style: TextStyle(color:principalTextColor,fontWeight: FontWeight.bold),),
+                    Text((nombre + commande.nombre ).toString(),style: TextStyle(color:principalTextColor,fontWeight: FontWeight.bold),),
                     GestureDetector(
                       onTap: (){
                         setState(() {
@@ -313,7 +325,7 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                         SizedBox(height: 5,),
                         Row(
                           children: [
-                            Text((price !=0?(price+priceadd)*nombre:(produit.price+priceadd)*nombre).toString(),
+                            Text((price !=0?(price+priceadd+commande.priceadd)*(nombre + commande.nombre):(produit.price+priceadd+commande.priceadd)*(nombre + commande.nombre)).toString(),
                               style: TextStyle(color: principalTextColor,fontSize: 20,fontWeight: FontWeight.bold),),
                             Text(" F.CFA",
                               style: TextStyle(color:  primaryColor,fontSize: 20,fontWeight: FontWeight.bold),),
@@ -331,7 +343,7 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(5),
-                        child: Text("Ajouter Au Panier",textAlign: TextAlign.center,
+                        child: Text("Modifier",textAlign: TextAlign.center,
                           style: TextStyle(color: principalTextColor,fontSize: 20),
                         ),
                       ),
@@ -439,7 +451,8 @@ List<Widget>grandeDescription(List<String> a){
     return l;
   }
   List<Widget> chowVarriantes(List<Variants> varriantes,double width,int prixInitial){
-
+    
+   Commande commande = widget.serv.commande[widget.serv.indexCommande];
     int indexFirst  ;
     bool priceChange = false;
     List<Widget> l = [];
@@ -453,7 +466,7 @@ List<Widget>grandeDescription(List<String> a){
         requiredVarriant.add(i);
       }
       for(int y = 0; y<varriantes[i].options.length;y++){
-        optionsParameters[i].optionValue.add(false);
+        optionsParameters[i].optionValue.add(commande.varriantes[i].options[y].etat);
         if(varriantes[i].options[y].price >0)priceChange = true;
         if(priceChange) indexFirst = y;
       }
@@ -556,7 +569,7 @@ List<Widget>grandeDescription(List<String> a){
                                                     fillColor:MaterialStateProperty.resolveWith(getColor),
                                                     value: optionsParameters[indexFirst].optionValue[index],
                                                     onChanged: (bool value){
-                                                      if(optionsParameters[indexFirst].actualChoice<optionsParameters[indexFirst].maxChoice)
+                                                      if(optionsParameters[indexFirst].actualChoice+ commande.varriantes[indexFirst].nbrChoce <optionsParameters[indexFirst].maxChoice)
                                                       {
                                                         print(varriantes[indexFirst].options[index].price);
 
@@ -585,7 +598,7 @@ List<Widget>grandeDescription(List<String> a){
                                                       setState(() {
 
                                                         optionsParameters[indexFirst].optionValue[index]?
-                                                        price =prixInitial
+                                                        price =  prixInitial
                                                             :
                                                         price =varriantes[indexFirst].options[index].price;
                                                       });
@@ -715,22 +728,25 @@ List<Widget>grandeDescription(List<String> a){
                                                     fillColor:MaterialStateProperty.resolveWith(getColor),
                                                     value: optionsParameters[i].optionValue[index],
                                                     onChanged: (bool value){
-                                                      if(optionsParameters[i].actualChoice<optionsParameters[i].maxChoice)
+                                                      if(optionsParameters[i].actualChoice+commande.varriantes[i].nbrChoce<optionsParameters[i].maxChoice)
                                                       {
 
                                                         setState(() {
-                                                          optionsParameters[i].optionValue[index]?priceadd =priceadd-varriantes[i].options[index].additionnalFee
+                                                          optionsParameters[i].optionValue[index]?
+                                                          priceadd =priceadd-varriantes[i].options[index].additionnalFee
                                                               :
                                                           priceadd =priceadd+varriantes[i].options[index].additionnalFee;
                                                           optionsParameters[i].optionValue[index]? optionsParameters[i].actualChoice--
                                                               :
                                                           optionsParameters[i].actualChoice++;
+                                                          print(optionsParameters[i].actualChoice);
                                                           optionsParameters[i].optionValue[index] = value;
                                                         });
                                                       }
                                                       else{
                                                           setState(() {
-                                                            optionsParameters[i].optionValue[index]?priceadd =priceadd-varriantes[i].options[index].additionnalFee
+                                                            optionsParameters[i].optionValue[index]?
+                                                            priceadd =priceadd-varriantes[i].options[index].additionnalFee
                                                                 :
                                                             priceadd =priceadd+varriantes[i].options[index].additionnalFee;
                                                             optionsParameters[i].optionValue[index]?optionsParameters[i].actualChoice--

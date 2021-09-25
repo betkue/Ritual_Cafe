@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ritual_cafe/collections/collections.dart';
 import 'package:ritual_cafe/collections/pagner.dart';
+import 'package:ritual_cafe/collections/updateProduit.dart';
 import 'package:ritual_cafe/collections/viewproduit.dart';
 import 'package:ritual_cafe/models/user.dart';
 import 'package:ritual_cafe/services/services.dart';
@@ -91,6 +92,8 @@ class RouteGenerator {
         
       case '/home' :
         return MaterialPageRoute(builder: (context) => Collections(settings.arguments));
+      case '/update' :
+        return MaterialPageRoute(builder: (context) => UpdateProduit(settings.arguments));
 
       default:
         return MaterialPageRoute(

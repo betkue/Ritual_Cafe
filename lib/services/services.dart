@@ -64,6 +64,13 @@ class Services with ChangeNotifier {
     _indexCollection = a;
     notifyListeners();
   }
+  //idcommande
+  int _indexCommande = 0 ;
+  get indexCommande => _indexCommande;
+  set indexCommande (int a){
+    _indexCommande = a;
+    notifyListeners();
+  }
 //collection
   CollectionsJson _collection;
   get collections => _collection;
@@ -96,8 +103,8 @@ List<Commande> _commandes = [];
   }
   //update
   updateCommande(int i,Commande a){
-    _commandes[i] = a ;
-    notifyListeners();
+   _commandes[i] = a ;
+   notifyListeners();
   }
   //connexion
   Future<ResponseSend> connexion(UserBdd user)async{

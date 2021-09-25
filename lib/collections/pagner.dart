@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:ritual_cafe/collections/colors.dart';
 import 'package:ritual_cafe/models/commande.dart';
 import 'package:ritual_cafe/services/services.dart';
 import 'package:ritual_cafe/clients/auth/decoration.dart';
-import 'dart:math' as math;
 class Pagner extends StatelessWidget {
   Services serv;
  Pagner(this.serv);
@@ -36,7 +36,7 @@ class _PagnerFullState extends State<PagnerFull> {
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
-                Text('Voulez vous supprimer cette commande du Pagner?'),
+                Text('Voulez vous supprimer cette commande du Panier?'),
               ],
             ),
           ),
@@ -70,13 +70,13 @@ class _PagnerFullState extends State<PagnerFull> {
           Container(
             width: width,
             child: Text(a, textAlign: TextAlign.start,
-              style: new TextStyle(color: Colors.white),
+              style: new TextStyle(color: principalTextColor),
               maxLines: 3,
             ),
           ),
           Container(
             width: 20,
-            child: Icon(Icons.cancel,color: Colors.red,size: 20,),
+            child: Icon(Icons.cancel,color: errorTextColor,size: 20,),
           )
 
         ],
@@ -102,17 +102,16 @@ class _PagnerFullState extends State<PagnerFull> {
                           Navigator.of(context).pushNamedAndRemoveUntil('/home',
                           (Route<dynamic> route) => false,arguments: widget.serv);
                       },
-                      child: Icon(Icons.arrow_back,color: Colors.white,),
+                      child: Icon(Icons.arrow_back,color: principalTextColor,),
                     ),
                     title:Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.grid_view,color: Colors.grey,),
                         Container(
                             padding: const EdgeInsets.all(8.0), child:
-                            Text( "Pagner",
+                            Text( "Panier",
                           style: TextStyle(
-                              color: Color.fromRGBO(202, 115, 64, 1),
+                              color: primaryColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 36
                           ),)),
@@ -140,7 +139,19 @@ class _PagnerFullState extends State<PagnerFull> {
               child: SingleChildScrollView(
                 child: Column(
                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: createList(servs),
+                  children: createList(servs).isEmpty?
+                    [
+                      SizedBox(
+                        height:  MediaQuery .of(context).size.height/4,
+                      ),
+                      Text("Votre Panier est actuellement vide",
+                      style: TextStyle(
+                        color: secondaryTextColor,
+                        fontStyle: FontStyle.italic
+                      ),)
+                    ]:
+                    createList(servs)
+                  ,
                 ),
               ),
             ),
@@ -152,14 +163,14 @@ class _PagnerFullState extends State<PagnerFull> {
                         Column(
                           children: [
                             Text("Prix",
-                              style: TextStyle(color: Colors.grey),),
+                              style: TextStyle(color: secondaryTextColor),),
                             SizedBox(height: 5,),
                             Row(
                               children: [
                                 Text(servs.total.toString(),
-                                  style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
+                                  style: TextStyle(color: principalTextColor,fontSize: 20,fontWeight: FontWeight.bold),),
                                 Text(" F.CFA",
-                                  style: TextStyle(color:  Color.fromRGBO(202, 115, 64, 1),fontSize: 20,fontWeight: FontWeight.bold),),
+                                  style: TextStyle(color:  primaryColor,fontSize: 20,fontWeight: FontWeight.bold),),
                               ],
                             ),
                           ],
@@ -168,17 +179,18 @@ class _PagnerFullState extends State<PagnerFull> {
                     ),
                     
                         GestureDetector(
-                          onTap: (){},
+                          onTap: (){
+                          },
                           child: Container(
                           width: width,
                           decoration: BoxDecoration(
-                            color:  Color.fromRGBO(202, 115, 64, 1),
+                            color:  primaryColor,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(5),
                             child: Text("Commander",textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white,fontSize: 20),
+                              style: TextStyle(color: principalTextColor,fontSize: 20),
                             ),
                           ),
                         ),
@@ -197,6 +209,12 @@ class _PagnerFullState extends State<PagnerFull> {
     for (var i = 0; i < servs.commande.length; i++) {
       Commande com = servs.commande[i];
       Widget a =  GestureDetector(
+                      onTap: (){
+                        
+                            servs.indexCommande =i;
+                            
+                             Navigator.of(context).pushNamed('/update',arguments: widget.serv);
+                      },
                       onLongPress: (){
                         _dialogDelete(servs, i);
                       },
@@ -233,9 +251,7 @@ class _PagnerFullState extends State<PagnerFull> {
                           right: 0,
                           child:Container(
                             decoration: BoxDecoration(
-                            //  color: Color.fromRGBO(15, 18, 25, 1),// Color.fromRGBO(82, 92, 113, 1),
-                              //gradient: gard,
-                              color: Colors.black54,
+                              color: containerPrixProduitPanierColor,
                               borderRadius:BorderRadius.only(
                                 bottomLeft: Radius.circular(20),
                                 topRight: Radius.circular(20),
@@ -243,7 +259,7 @@ class _PagnerFullState extends State<PagnerFull> {
 
                             ),
                           child: Padding(padding: EdgeInsets.only(top: 2,bottom: 2,left: 15,right: 15),
-                            child: Text(com.prixTotal.toString(),style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),),
+                            child: Text(com.prixTotal.toString(),style: TextStyle(color: principalTextColor,fontWeight: FontWeight.bold,fontSize: 15),),
                                             
                           ),
                           )
@@ -259,7 +275,7 @@ class _PagnerFullState extends State<PagnerFull> {
                                     ),
                                     //    ),
                                     child: Padding(padding: EdgeInsets.all(10),
-                                      child: Text(com.tag,style: TextStyle(color: Colors.white70,fontWeight: FontWeight.normal,fontSize: 14),),
+                                      child: Text(com.tag,style: TextStyle(color: containerTagProduitPanierColor,fontWeight: FontWeight.normal,fontSize: 14),),
                                          ),
                                   ),
                                 ),
@@ -271,15 +287,15 @@ class _PagnerFullState extends State<PagnerFull> {
                       ),
                       Container(
                         width: width-120,
-                        color:  Color.fromRGBO(82, 92, 113, 0),
+                        color:  secondaryColornull,
                         child:Padding(padding: EdgeInsets.all(5),
                           child:  Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(com.nom ,style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontSize: 15),),
-                            Text("Nombre : "+com.nombre.toString(),style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic),),
-                            Text(com.tag.toString(),style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic),),
-                            Text("Voir Plus",style: TextStyle(color: Color.fromRGBO(202, 115, 64, 1),fontStyle: FontStyle.italic),),
+                            Text(com.nom ,style: TextStyle(color: principalTextColor,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontSize: 15),),
+                            Text("Nombre : "+com.nombre.toString(),style: TextStyle(color: principalTextColor,fontStyle: FontStyle.italic),),
+                            Text(com.tag.toString(),style: TextStyle(color:principalTextColor,fontSize: 10,fontStyle: FontStyle.italic),),
+                            Text("Voir Plus",style: TextStyle(color: primaryColor,fontStyle: FontStyle.italic),),
                           ],
                         ),
                         ),
@@ -293,11 +309,6 @@ class _PagnerFullState extends State<PagnerFull> {
       l.add(a);
       l.add(SizedBox(height:10));
     }
-      /*
-                ListTile(
-                          title:Text(com.nom,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
-                          subtitle: createListTag(com),
-                        ), */
     return l;
   }
 

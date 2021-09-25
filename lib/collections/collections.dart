@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/painting.dart';
 import 'package:ritual_cafe/clients/auth/decoration.dart';
+import 'package:ritual_cafe/collections/colors.dart';
 import 'package:ritual_cafe/models/json/collectionjson.dart';
 import 'package:ritual_cafe/services/services.dart';
 import 'package:provider/provider.dart';
@@ -68,12 +69,12 @@ class _CollectionFullState extends State<CollectionFull> {
                     title:Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.grid_view,color: Colors.grey,),
+                        Icon(Icons.grid_view,color: secondaryTextColor,),
                         Container(
                             padding: const EdgeInsets.all(8.0), child:
                             Text( "Ritual Café",
                           style: TextStyle(
-                              color: Color.fromRGBO(202, 115, 64, 1),
+                              color: primaryColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 36
                           ),)),
@@ -95,7 +96,7 @@ class _CollectionFullState extends State<CollectionFull> {
                 children: [
                   Padding(padding: EdgeInsets.only(right: 31,left: 31,top: 5),
                     child: Text('Consommer le meilleur \nCafé du Cameroun ',
-                      style:TextStyle(color: Colors.white,
+                      style:TextStyle(color: principalTextColor,
                       fontSize: 26,
                         fontWeight: FontWeight.bold
                       ) ,),
@@ -111,22 +112,22 @@ class _CollectionFullState extends State<CollectionFull> {
                             children: [
                               Expanded(
                                   child: Container(
-                                    //decoration: BoxDecoration(border: Border.all(color: Colors.grey),borderRadius: BorderRadius.all(Radius.circular(10))),
+                                    //decoration: BoxDecoration(border: Border.all(color: secondaryTextColor),borderRadius: BorderRadius.all(Radius.circular(10))),
                                     child: Column(
                                       children: [
                                         TextFormField(
                                             textAlign: TextAlign.left,
-                                            style: TextStyle(fontSize: 11.0,color: Colors.white,fontStyle: FontStyle.italic),
-                                            cursorColor: Colors.white,
+                                            style: TextStyle(fontSize: 11.0,color: principalTextColor,fontStyle: FontStyle.italic),
+                                            cursorColor: principalTextColor,
                                             controller: rechercheController,
                                             decoration: InputDecoration(
-                                                fillColor: Color.fromRGBO(82, 92, 113, 0.3),
+                                                fillColor: secondaryColor,
                                                 filled: true,
                                                 border: OutlineInputBorder(borderRadius:
                                                 BorderRadius.all(Radius.circular(10.0))),
                                                 focusedBorder: OutlineInputBorder(
                                                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                                  borderSide: BorderSide(color: Colors.grey,width: 0),
+                                                  borderSide: BorderSide(color: secondaryTextColor,width: 0),
                                                 ),
                                                 contentPadding: new EdgeInsets.symmetric(vertical: 0.0),
                                                 prefixIcon: Padding(
@@ -150,7 +151,7 @@ class _CollectionFullState extends State<CollectionFull> {
                                                     },
                                                     child:  Icon(
                                                       Icons.search,
-                                                      color: Colors.grey,
+                                                      color: secondaryTextColor,
                                                     ),
                                                   ), // icon is 48px widget.
                                                 ),
@@ -165,13 +166,13 @@ class _CollectionFullState extends State<CollectionFull> {
                                                     },
                                                     child:  Icon(
                                                       Icons.cancel_outlined,
-                                                      color: Colors.grey,
+                                                      color: secondaryTextColor,
                                                     ),
                                                   ), // icon is 48px widget.
                                                 ):
                                                 Container(width: 0,height: 0,),
                                                 labelText: 'Trouver votre plaisir',
-                                                labelStyle: TextStyle(fontSize: 20.0,color: Colors.grey)),
+                                                labelStyle: TextStyle(fontSize: 20.0,color: secondaryTextColor)),
                                             onTap: (){
                                               setState(() {
                                                 inSeach = true;
@@ -195,7 +196,7 @@ class _CollectionFullState extends State<CollectionFull> {
                                             }
                                         ),
                                         Container(
-                                          //decoration: BoxDecoration(border: Border.all(color: Colors.grey),borderRadius: BorderRadius.all(Radius.circular(10))),
+                                          //decoration: BoxDecoration(border: Border.all(color: secondaryTextColor),borderRadius: BorderRadius.all(Radius.circular(10))),
                                           child: ExpandedSection(
                                             expand: inSeach,
                                             height: 100,
@@ -233,14 +234,14 @@ class _CollectionFullState extends State<CollectionFull> {
                                                                     borderRadius: BorderRadius.all(Radius.circular(10.0)
                                                                     ),
                                                                   )) ,
-                                                              title:  Text(foodList[index],style: TextStyle(color: Colors.white),maxLines: 2,),
+                                                              title:  Text(foodList[index],style: TextStyle(color: principalTextColor),maxLines: 2,),
 
                                                           ),
                                                         )
                                                         :Text(
                                                           'Aucune collections ne correspond a cette recherche',
                                                           style: TextStyle(
-                                                              fontSize: 10,fontStyle: FontStyle.italic,color: Colors.grey ,fontWeight: FontWeight.w600),
+                                                              fontSize: 10,fontStyle: FontStyle.italic,color: secondaryTextColor ,fontWeight: FontWeight.w600),
                                                         );
                                                       }),
                                             ),
@@ -278,7 +279,7 @@ class _CollectionFullState extends State<CollectionFull> {
                   ),
                   Padding(padding: EdgeInsets.only(right: 30,left: 30,top: 20,bottom: 15),
                     child: Text('Spécialement pour vous',
-                      style:TextStyle(color: Colors.white,
+                      style:TextStyle(color: principalTextColor,
                         fontSize: 16,
                       ) ,)
                   ),
@@ -315,14 +316,14 @@ class _CollectionFullState extends State<CollectionFull> {
                              child: Column(
                                children: [
                                  Text("3 recettes de cafe que vous devez essayer",maxLines: 2,
-                                 style: TextStyle(fontSize: 16,color: Colors.white),
+                                 style: TextStyle(fontSize: 16,color: principalTextColor),
                                  ),
                                  SizedBox(height: 55,),
                                  Row(
                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                    children: [
                                      Text('En savoir plus',
-                                     style: TextStyle(color: Colors.white),
+                                     style: TextStyle(color: principalTextColor),
                                      ),
                                      GestureDetector(
                                        onTap:(){
@@ -332,7 +333,7 @@ class _CollectionFullState extends State<CollectionFull> {
                                              arguments: servs
                                          );
                                        },
-                                      child: Icon(Icons.trending_flat,color: Color.fromRGBO(202, 115, 64, 1),size: 20,),
+                                      child: Icon(Icons.trending_flat,color: primaryColor,size: 20,),
                                      )
                                    ],
                                  ),
@@ -380,10 +381,10 @@ class _CollectionFullState extends State<CollectionFull> {
             children: [
               Text(data[i].name,style: TextStyle(
                 fontSize: 15,
-                color: etats[i] ? Color.fromRGBO(202, 115, 64, 1):Color.fromRGBO(82, 92, 113, 1)
+                color: etats[i] ? primaryColor:secondaryColorSombre
               ),),
               SizedBox(height: 5,),
-              etats[i] ? Icon(Icons.circle,color: Color.fromRGBO(202, 115, 64, 1),size: 6,): Container(width: 0,height: 0,)
+              etats[i] ? Icon(Icons.circle,color: primaryColor,size: 6,): Container(width: 0,height: 0,)
             ]
           ),
         onTap:(){
@@ -451,9 +452,9 @@ class _CollectionFullState extends State<CollectionFull> {
                           child: Padding(padding: EdgeInsets.only(top: 2,bottom: 2,left: 15,right: 15),
                             child: Row(
                               children: [
-                                Icon(Icons.star,color: Color.fromRGBO(202, 115, 64, 1),size: 13,),
+                                Icon(Icons.star,color: primaryColor,size: 13,),
                                 SizedBox(width: 2,),
-                                Text(createNote(data[i].avis),style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 13),),
+                                Text(createNote(data[i].avis),style: TextStyle(fontWeight: FontWeight.bold,color: principalTextColor,fontSize: 13),),
 
                               ],
                             ),
@@ -469,13 +470,13 @@ class _CollectionFullState extends State<CollectionFull> {
                       children: [
                         SizedBox(height: 5,),
                         Text(data[i].name,
-                          style: TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.w400),
+                          style: TextStyle(fontSize: 16,color: principalTextColor,fontWeight: FontWeight.w400),
                         ),
                         SizedBox(height: 5,),
                         Text(data[i].tags[0].name,
                           style: TextStyle(
                               fontSize: 10,
-                              color: Colors.grey),
+                              color: secondaryTextColor),
                         ),
                         SizedBox(height: 10,),
                         Row(
@@ -484,10 +485,10 @@ class _CollectionFullState extends State<CollectionFull> {
                             Row(
                               children: [
                                 Text(data[i].price.toString(),
-                                  style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+                                  style: TextStyle(color: principalTextColor,fontWeight: FontWeight.bold),
                                 ),
                                 Text("F.CFA".toString(),
-                                  style: TextStyle(color: Color.fromRGBO(202, 115, 64, 1),fontWeight: FontWeight.bold),
+                                  style: TextStyle(color: primaryColor,fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -502,12 +503,12 @@ class _CollectionFullState extends State<CollectionFull> {
                                child:
                                Container(
                                  decoration: BoxDecoration(
-                                  color: Color.fromRGBO(202, 115, 64, 1),
+                                  color: primaryColor,
                                    borderRadius: BorderRadius.circular(4),
                                  ),
-                                 child: Icon(Icons.add,color: Colors.white,size: 20,),),
+                                 child: Icon(Icons.add,color: principalTextColor,size: 20,),),
                              )
-                             //Icon(Icons.add,color: Colors.white,size: 20,)
+                             //Icon(Icons.add,color: principalTextColor,size: 20,)
                           ],
                         ),
                       ],
@@ -533,27 +534,27 @@ class _CollectionFullState extends State<CollectionFull> {
         BottomNavigationBarItem(
         icon: Icon(Icons.home),
         label: '',
-        backgroundColor: Color.fromRGBO(82, 92, 113, 0.3)//Colors.white10,
+        backgroundColor: secondaryColor//principalTextColor10,
         ),
         BottomNavigationBarItem(
         icon: Icon(Icons.shopping_bag),
         label: '',
-        backgroundColor:  Color.fromRGBO(82, 92, 113, 0.3)//Colors.white10,
+        backgroundColor:  secondaryColor//principalTextColor10,
         ),
         BottomNavigationBarItem(
         icon: Icon(Icons.favorite),
         label: '',
-        backgroundColor: Color.fromRGBO(82, 92, 113, 0.3)//Colors.white10,
+        backgroundColor: secondaryColor//principalTextColor10,
         ),
         BottomNavigationBarItem(
         icon: Icon(Icons.notifications),
         label: '',
-            backgroundColor: Color.fromRGBO(82, 92, 113, 0.3)//Colors.white10,
+            backgroundColor: secondaryColor//principalTextColor10,
         ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromRGBO(202, 115, 64, 1),
-        unselectedItemColor:Colors.grey,
+        selectedItemColor: primaryColor,
+        unselectedItemColor:secondaryTextColor,
         onTap: _onItemTapped,
     );
   }
