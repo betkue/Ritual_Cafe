@@ -22,7 +22,7 @@ class DataBase {
       join(await getDatabasesPath(), 'cafe.db'),
       onCreate: (db, version) {
         db.execute(
-          "CREATE TABLE  user(password TEXT,email TEXT)",
+          "CREATE TABLE  user(code TEXT)",
         );
       },
 
@@ -41,13 +41,14 @@ class DataBase {
   //suppression de l'utilisateur
   void deleteUser(String title) async {
     final Database db = await database;
-    db.delete("user", where: "email = ?", whereArgs: [title]);
+    db.delete("user", where: "code = ?", whereArgs: [title]);
   }
   //modification de l'utilisateur
   void updateUser(UserBdd user,String nom) async {
     final Database db = await database;
     await db.update("user", user.toMap(),
-        where: "email = ?", whereArgs: [nom]);
+        where: "code = ?", whereArgs: [nom]);
+        
   }
 
 
@@ -59,7 +60,7 @@ class DataBase {
     List<UserBdd> users = List.generate(maps.length, (i) {
       return UserBdd.fromMap(maps[i]);
     });
-    List<UserBdd> defaultUser = [UserBdd("", "")];
+    List<UserBdd> defaultUser = [UserBdd("NULL")];
     if (users.isEmpty) {
       for (UserBdd user in defaultUser) {
         insertUser(user);

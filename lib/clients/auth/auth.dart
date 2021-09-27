@@ -14,7 +14,7 @@ class Auth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(value:Services(UserBdd("","")),
+    return ChangeNotifierProvider.value(value:Services(UserBdd("NULL")),
     child: AuthFull(),
     );
   }
@@ -132,16 +132,17 @@ class _AuthFullState extends State<AuthFull> {
                       servs.send  = true;
                       List<String> nomprenom = nomController.text.split(' ');
                       User user = User(nomprenom[1], nomprenom[0], mailController.text, passController.text,phoneController.text);
-                      Services serv = Services(UserBdd("",""));
+                     
                       //serv.send=true;
 
-                      ResponseSend result = await serv.inscription(user);
+                      ResponseSend result = await servs.inscription(user);
 
                       if(result.etat)
                       {
                         snack(result.message,
                             Icon(Icons.check, color: validerColor,));
-                        Navigator.of(context).pushNamedAndRemoveUntil('/',(Route<dynamic> route) => false);
+                       Navigator.of(context).pushNamedAndRemoveUntil('/',
+                       (Route<dynamic> route) => false);
 
                       }
                       else
@@ -177,18 +178,16 @@ class _AuthFullState extends State<AuthFull> {
                   if (formKey.currentState.validate()) {
 
                     servs.send  = true;
-                    UserBdd user = UserBdd(passController.text,mailController.text);
-                    Services serv = Services(UserBdd("",""));
-                    ResponseSend result = await serv.connexion(user);
-                    print(result.message);print(result.etat);
-
+                    UserBdd user = UserBdd(passController.text);
+                    ResponseSend result = await servs.connexion(passController.text,mailController.text);
+                    
                     if(result.etat)
                     {
 
                       snack(result.message,
                           Icon(Icons.check, color: validerColor,));
-                      Navigator.of(context).pushNamedAndRemoveUntil('/',
-                              (Route<dynamic> route) => false);
+                     Navigator.of(context).pushNamedAndRemoveUntil('/',
+                      (Route<dynamic> route) => false);
 
                     }
                     else
@@ -199,7 +198,7 @@ class _AuthFullState extends State<AuthFull> {
                       });
 
                       snack(result.message, Icon(Icons.details, color: errorTextColor,));
-
+                            
                     }
 
 
@@ -444,7 +443,7 @@ class _AuthFullState extends State<AuthFull> {
       Padding(
         padding: const EdgeInsets.only(left: 16),
         child: Text(error,textAlign: TextAlign.center,
-          style: TextStyle(color: principalTextColor,
+          style: TextStyle(color: errorTextColor,
           ),),
       ),
     ];

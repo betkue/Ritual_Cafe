@@ -54,7 +54,9 @@ class _CollectionFullState extends State<CollectionFull> {
   Widget build(BuildContext context) {
     double width = MediaQuery .of(context).size.width;
     return Consumer<Services>(
-      builder: (context,servs,_)=> FutureBuilder<CollectionsJson>(
+      builder: (context,servs,_)=>
+      !servs.onCollection?
+       FutureBuilder<CollectionsJson>(
           future: servs.collection(),
           builder: (BuildContext context,
               AsyncSnapshot<CollectionsJson> snapshot) {
@@ -351,7 +353,6 @@ class _CollectionFullState extends State<CollectionFull> {
 
                   ],
                     ),
-                    bottomNavigationBar: navyBottomBar(),
                   );//si non ouvrir page de login et singin
 
             }
@@ -360,7 +361,300 @@ class _CollectionFullState extends State<CollectionFull> {
               return Loadding();
             }
           }
-      ),
+      ):
+       Scaffold(
+                  backgroundColor: Colors.black,
+                  appBar: AppBar(
+                    backgroundColor: Colors.black,
+                    centerTitle: true,
+                    title:Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(Icons.grid_view,color: secondaryTextColor,),
+                        Container(
+                            padding: const EdgeInsets.all(8.0), child:
+                            Text( "Ritual Café",
+                          style: TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 36
+                          ),)),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(15.0),
+                          child: Image.asset(
+                            'assets/img.jpg',
+                            fit: BoxFit.cover,
+                            height: 40,
+                            width: 40,
+                          ),
+                        )
+                      ],
+
+                    ) ,
+
+                  ),
+                  body: ListView(
+                children: [
+                  Padding(padding: EdgeInsets.only(right: 31,left: 31,top: 5),
+                    child: Text('Consommer le meilleur \nCafé du Cameroun ',
+                      style:TextStyle(color: principalTextColor,
+                      fontSize: 26,
+                        fontWeight: FontWeight.bold
+                      ) ,),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15,left: 30,right: 30,bottom: 5),
+                    child: SafeArea(
+                      child: Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                  child: Container(
+                                    //decoration: BoxDecoration(border: Border.all(color: secondaryTextColor),borderRadius: BorderRadius.all(Radius.circular(10))),
+                                    child: Column(
+                                      children: [
+                                        TextFormField(
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(fontSize: 11.0,color: principalTextColor,fontStyle: FontStyle.italic),
+                                            cursorColor: principalTextColor,
+                                            controller: rechercheController,
+                                            decoration: InputDecoration(
+                                                fillColor: secondaryColor,
+                                                filled: true,
+                                                border: OutlineInputBorder(borderRadius:
+                                                BorderRadius.all(Radius.circular(10.0))),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                                  borderSide: BorderSide(color: secondaryTextColor,width: 0),
+                                                ),
+                                                contentPadding: new EdgeInsets.symmetric(vertical: 0.0),
+                                                prefixIcon: Padding(
+                                                  padding: EdgeInsets.all(0.0),
+                                                  child:GestureDetector(
+                                                    onTap: (){
+                                                      setState(() {
+                                                        foodList = [];
+                                                        for(int i=0; i<stableList.length; i++)
+                                                        {
+
+                                                          if(stableList[i].toLowerCase().contains(rechercheController.text.toLowerCase()))
+                                                          {
+                                                            setState(() {
+                                                              foodList.add(stableList[i]);
+                                                            });
+                                                          }
+
+                                                        }
+                                                      });
+                                                    },
+                                                    child:  Icon(
+                                                      Icons.search,
+                                                      color: secondaryTextColor,
+                                                    ),
+                                                  ), // icon is 48px widget.
+                                                ),
+                                                suffixIcon: inSeach? Padding(
+                                                  padding: EdgeInsets.all(0.0),
+                                                  child:GestureDetector(
+                                                    onTap: (){
+                                                      setState(() {
+                                                        inSeach = false;
+                                                        rechercheController.text = '';
+                                                      });
+                                                    },
+                                                    child:  Icon(
+                                                      Icons.cancel_outlined,
+                                                      color: secondaryTextColor,
+                                                    ),
+                                                  ), // icon is 48px widget.
+                                                ):
+                                                Container(width: 0,height: 0,),
+                                                labelText: 'Trouver votre plaisir',
+                                                labelStyle: TextStyle(fontSize: 20.0,color: secondaryTextColor)),
+                                            onTap: (){
+                                              setState(() {
+                                                inSeach = true;
+                                              });
+                                            },
+                                            onChanged: (value) {
+                                              setState(() {
+                                                    foodList = [];
+                                                    for(int i=0; i<stableList.length; i++)
+                                                    {
+
+                                                      if(stableList[i].toLowerCase().contains(rechercheController.text.toLowerCase()))
+                                                      {
+                                                        setState(() {
+                                                          foodList.add(stableList[i]);
+                                                        });
+                                                      }
+
+                                                    }
+                                              });
+                                            }
+                                        ),
+                                        Container(
+                                          //decoration: BoxDecoration(border: Border.all(color: secondaryTextColor),borderRadius: BorderRadius.all(Radius.circular(10))),
+                                          child: ExpandedSection(
+                                            expand: inSeach,
+                                            height: 100,
+                                            child: MyScrollbar(
+
+                                              builder: (context, scrollController2) =>
+                                                  ListView.builder(
+                                                      padding: EdgeInsets.all(0),
+                                                      controller: scrollController2,
+                                                      shrinkWrap: true,
+                                                      itemCount: foodList.length,
+                                                      itemBuilder: (context, index) {
+                                                        return foodList.length>0?
+                                                        GestureDetector(
+                                                          onTap: (){
+
+                                                            setState(() {
+                                                              etats[servs.indexCollection] = false;
+                                                              servs.indexCollection= stableList.indexOf(foodList[index]);
+                                                              etats[servs.indexCollection] = true;
+                                                              inSeach = !inSeach;
+                                                              rechercheController.text = foodList[index];
+
+                                                            });
+                                                          },
+                                                          child: ListTile(
+                                                              leading:  Container(
+                                                                  height:30,
+                                                                  width: 30,
+                                                                  decoration: BoxDecoration(
+                                                                    image: DecorationImage(
+                                                                      image: NetworkImage(servs.collections.data[stableList.indexOf(foodList[index])].produits[0].medias[0].link),
+                                                                      fit: BoxFit.cover,
+                                                                    ),
+                                                                    borderRadius: BorderRadius.all(Radius.circular(10.0)
+                                                                    ),
+                                                                  )) ,
+                                                              title:  Text(foodList[index],style: TextStyle(color: principalTextColor),maxLines: 2,),
+
+                                                          ),
+                                                        )
+                                                        :Text(
+                                                          'Aucune collections ne correspond a cette recherche',
+                                                          style: TextStyle(
+                                                              fontSize: 10,fontStyle: FontStyle.italic,color: secondaryTextColor ,fontWeight: FontWeight.w600),
+                                                        );
+                                                      }),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15,left: 30,right: 30,bottom: 5),
+                      child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                       child:  Row(
+                        children: createlistcollection(servs.collections,servs),
+                      )
+                      ),
+                    ),
+
+                  Padding(padding: EdgeInsets.only(left: 30,right: 30,bottom: 8,top: 5),
+                    child: Container(
+
+                      child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child:  Row(
+                            children: createlistcard(servs.collections,width/2.6,servs),
+                          )
+                      ),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(right: 30,left: 30,top: 20,bottom: 15),
+                    child: Text('Spécialement pour vous',
+                      style:TextStyle(color: principalTextColor,
+                        fontSize: 16,
+                      ) ,)
+                  ),
+
+                   Padding(padding: EdgeInsets.only(left: 30,right: 30,),
+                     child: Container(
+                       decoration: BoxDecoration(
+                         gradient: gard,
+                         borderRadius: BorderRadius.circular(14),
+                       ),
+                       child:  Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Padding(
+                           padding: const EdgeInsets.only(left: 5,top: 8,bottom: 8),
+                           child:ClipRRect(
+                             borderRadius: BorderRadius.circular(20),
+                             child: CachedNetworkImage(
+                               imageUrl: servs.collections.data[servs.indexCollection].produits[0].medias[0].link,
+                               placeholder: (context, url) =>
+                                   Center(child: CircularProgressIndicator()),
+                               errorWidget: (context, url, error) => Icon(Icons.error),
+                               height: 100,
+                               width: 100,
+                               fit: BoxFit.cover,
+
+                             )
+                           ),
+                         ),
+                         Padding(
+                           padding: const EdgeInsets.only(right: 5),
+                           child: Container(
+                             width: width-180,
+                             child: Column(
+                               children: [
+                                 Text("3 recettes de cafe que vous devez essayer",maxLines: 2,
+                                 style: TextStyle(fontSize: 16,color: principalTextColor),
+                                 ),
+                                 SizedBox(height: 55,),
+                                 Row(
+                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                   children: [
+                                     Text('En savoir plus',
+                                     style: TextStyle(color: principalTextColor),
+                                     ),
+                                     GestureDetector(
+                                       onTap:(){
+                                         servs.indexProduit = 0;
+                                         Navigator.pushNamed(context,
+                                             '/produits',
+                                             arguments: servs
+                                         );
+                                       },
+                                      child: Icon(Icons.trending_flat,color: primaryColor,size: 20,),
+                                     )
+                                   ],
+                                 ),
+                               ],
+                             ),
+                           ),
+                         )
+                       ],
+                     ),
+
+                   ),
+                   )
+
+
+
+                  ],
+       
+       ))//si non ouvrir page de login et singin
+
+           
     );
   }
   List<String>grnaratelist(CollectionsJson collectionsJson){
@@ -526,39 +820,7 @@ class _CollectionFullState extends State<CollectionFull> {
       l.add(SizedBox(width: 15,));
     }
     return l;
-  }
-  Widget navyBottomBar() {
-    return   BottomNavigationBar(
-         showSelectedLabels: false,
-        items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-        icon: Icon(Icons.home),
-        label: '',
-        backgroundColor: secondaryColor//principalTextColor10,
-        ),
-        BottomNavigationBarItem(
-        icon: Icon(Icons.shopping_bag),
-        label: '',
-        backgroundColor:  secondaryColor//principalTextColor10,
-        ),
-        BottomNavigationBarItem(
-        icon: Icon(Icons.favorite),
-        label: '',
-        backgroundColor: secondaryColor//principalTextColor10,
-        ),
-        BottomNavigationBarItem(
-        icon: Icon(Icons.notifications),
-        label: '',
-            backgroundColor: secondaryColor//principalTextColor10,
-        ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: primaryColor,
-        unselectedItemColor:secondaryTextColor,
-        onTap: _onItemTapped,
-    );
-  }
-    String createNote(List<Avis >avis){
+  }createNote(List<Avis >avis){
       String note = '';
       double notes = 0;
       for(int i = 0;i<avis.length;i++){

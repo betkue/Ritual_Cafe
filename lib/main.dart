@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ritual_cafe/collections/collections.dart';
+import 'package:ritual_cafe/collections/home.dart';
 import 'package:ritual_cafe/collections/pagner.dart';
 import 'package:ritual_cafe/collections/updateProduit.dart';
 import 'package:ritual_cafe/collections/viewproduit.dart';
@@ -49,21 +49,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
             if (snapshot.hasData)
             {
+              
 
 
               List<UserBdd>  users = snapshot.data;
               UserBdd user = users[0];
-              if(user.email=="")//si pas d'utilisateur enregistré
+              print("code bdd = "+user.code);
+             // print(user.code);
+              if(user.code=="NULL")//si pas d'utilisateur enregistré
                   {//aller a l'authentificatiion
                 return Auth();
               }
               else//sinon
                   {
+                    print("activer collection");
                 //pour toujours avoir le mail d'utilisateur en cas de besoin
                 Services serv  = Services(user);
-                print(user.email);
-                //aller a COllections
-                return Collections(serv);
+                return Home(serv);
               }
 
             }
@@ -83,15 +85,13 @@ class RouteGenerator {
     switch(settings.name) {
       case '/' :
         return MaterialPageRoute(builder: (context) => MyApp());
-      case '/collections' :
-        return MaterialPageRoute(builder: (context) => Collections(settings.arguments));
       case '/produits' :
         return MaterialPageRoute(builder: (context) => ViewProduit(settings.arguments));
       case '/pagner' :
         return MaterialPageRoute(builder: (context) => Pagner(settings.arguments));
         
       case '/home' :
-        return MaterialPageRoute(builder: (context) => Collections(settings.arguments));
+        return MaterialPageRoute(builder: (context) => Home(settings.arguments));
       case '/update' :
         return MaterialPageRoute(builder: (context) => UpdateProduit(settings.arguments));
 

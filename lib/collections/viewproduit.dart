@@ -101,7 +101,8 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
     
     servs.total = servs.total + prix;
     servs.commande = commande;
-    Navigator.of(context).pushNamedAndRemoveUntil('/pagner',(Route<dynamic> route) => false,arguments: widget.serv);
+    servs.selectedIndex = 1;
+    Navigator.of(context).pushNamedAndRemoveUntil('/home',(Route<dynamic> route) => false,arguments: widget.serv);
   }
   void valider(Services servs){
     bool valid = true;

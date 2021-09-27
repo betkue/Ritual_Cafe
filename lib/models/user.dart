@@ -9,21 +9,18 @@ class User{
 }
 //user de la bdd mais aussi utilise en connexion
 class UserBdd{
-  String password;
-  String email;
-  UserBdd(this.password,this.email);
+  String code;
+  UserBdd(this.code);
   Map<String, dynamic> toMap() {
     return {
-      'password':password,
-      'email':email
+      'code':code,
 
     };
   }
 
   factory  UserBdd.fromMap(Map<String, dynamic> map) => new  UserBdd(
 
-      map['password'],
-      map['email']
+      map['code'],
 
   );
 }

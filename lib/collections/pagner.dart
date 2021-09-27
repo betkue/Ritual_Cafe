@@ -85,7 +85,6 @@ class _PagnerFullState extends State<PagnerFull> {
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
   } @override
   Widget build(BuildContext context) {
-   var produit = widget.serv.collections.data[widget.serv.indexCollection].produits[widget.serv.indexProduit] ;
     //price = produit.price;
 
    double width = MediaQuery .of(context).size.width;
@@ -96,14 +95,14 @@ class _PagnerFullState extends State<PagnerFull> {
           appBar: AppBar(
                     backgroundColor: Colors.black,
                     centerTitle: true,
-                    leading: GestureDetector(
+                   /* leading: GestureDetector(
                       onTap: (){
                                               
                           Navigator.of(context).pushNamedAndRemoveUntil('/home',
                           (Route<dynamic> route) => false,arguments: widget.serv);
                       },
                       child: Icon(Icons.arrow_back,color: principalTextColor,),
-                    ),
+                    ),*/
                     title:Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

@@ -7,26 +7,23 @@ import 'package:ritual_cafe/models/json/collectionjson.dart';
 import 'package:ritual_cafe/models/json/errorconnexion.dart';
 import 'package:ritual_cafe/models/json/errorlogin.dart';
 import 'package:ritual_cafe/models/response.dart';
-
+import 'package:ritual_cafe/models/json/JsonUser.dart';
 import 'package:ritual_cafe/models/user.dart';
+//import 'package:sqflite/sqflite.dart';
 
 class Services with ChangeNotifier {
-  final UserBdd user;
+   UserBdd user;
   final  url = Uri.http('192.168.43.253','freeing/index.php');
   Services(this.user);
-  void _searchUser(List<UserBdd>  users, UserBdd user){
-    bool present = false;
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].password == user.password && users[i].email == user.email) {
-        present = true;
-      }
-
-    }
-    if (!present) {
-      DataBase.instance.updateUser(user, '');
-    }
+  
+  void _searchUser(UserBdd use)async{
+    print("code result : = "+use.code);
+    print(" User.Code = :"+user.code);
+      DataBase.instance.updateUser(use,user.code);
+    
   }
-//user register
+
+  //user register
   User _registerUser =User('', '', '','','');//user initial
   get registerUser =>_registerUser;
   set registerUser(User a)
@@ -42,11 +39,23 @@ class Services with ChangeNotifier {
     _login = a;
     notifyListeners();
   }
+    bool _onCollection = false ;
+  get onCollection => _onCollection;
+  set onCollection (bool a){
+    _onCollection = a;
+    notifyListeners();
+  }
   //determine si une requete future a ete appele pour pouvoir creer le loadding
   bool _send = false ;
   get send => _send;
   set send (bool a){
     _send = a;
+    notifyListeners();
+  }
+  int _selectedIndex = 0;
+    get selectedIndex => _selectedIndex;
+  set selectedIndex (int a){
+    _selectedIndex = a;
     notifyListeners();
   }
 //indexproduit
@@ -86,6 +95,8 @@ class Services with ChangeNotifier {
     _total = a;
     notifyListeners();
   }
+  
+ 
 //Commandes
 List<Commande> _commandes = [];
 
@@ -107,7 +118,7 @@ List<Commande> _commandes = [];
    notifyListeners();
   }
   //connexion
-  Future<ResponseSend> connexion(UserBdd user)async{
+  Future<ResponseSend> connexion(String pass,String mail)async{
 
     this.send = true ;
     final  url = Uri.https('dashboard.mystore.lamater.net','api/2021-05/clients/login');
@@ -115,17 +126,17 @@ List<Commande> _commandes = [];
     var response = await http.post(
         url,
         body:{
-          "email": user.email,
-          "password": user.password
+          "email": mail,
+          "password": pass
         } );
-    print(response.statusCode);print(response.body);
     switch (response.statusCode) {
       case 200 :
         final String responsestring  = response.body;
-        // JsonUser result = jsonUserFromJson(responsestring);
+         JsonUser result = jsonUserFromJson(responsestring);
+        // getUser(result.accessToken);
         //_registerUser = User(result.user.firstname,result.user.surname,result.user.email,result.user.email,result.user.tel);
-        List<UserBdd> users = await DataBase.instance.user();
-        _searchUser(users,user);
+        
+           _searchUser(UserBdd(result.accessToken));
         return ResponseSend(true, 'connected');
         break;
       case 403 :
@@ -157,9 +168,9 @@ List<Commande> _commandes = [];
       case 201 :
         final String responsestring  = response.body;
         _registerUser = user;
-        //  JsonUser result = jsonUserFromJson(responsestring);
-        List<UserBdd> users = await DataBase.instance.user();
-        _searchUser(users,UserBdd(user.password, user.email));
+         JsonUser result = jsonUserFromJson(responsestring);
+        //List<UserBdd> users = await DataBase.instance.user();
+        _searchUser(UserBdd(result.accessToken));
         return ResponseSend(true, 'connected');
         break;
       case 403 :
@@ -182,7 +193,28 @@ List<Commande> _commandes = [];
       String responsestring = response.body;
       CollectionsJson collections = CollectionsJsonFromJson(responsestring);
       _collection = collections ;
+      _onCollection = true;
       return collections;
     }
   }
+
+  Future<void> getUser(String token)async{
+    print(token);
+      //List<UserBdd> users = await DataBase.instance.user();
+      /*
+    http.Response response = await http.get(
+   // Uri.parse("https://dashboard.mystore.lamater.net/api/2021-05/user?company_id=430"),
+      Uri.parse("https://dashboard.genuka.com/api/2021-05/user?company_id=430"),
+      headers: {
+        "Authorization": "Bearer " + token,
+        "Accept": "application/json"
+      },
+  );
+  */
+
+  //print(response.statusCode);
+  //print(response.body);
+
+  }
+
 }
