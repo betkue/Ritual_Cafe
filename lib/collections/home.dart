@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ritual_cafe/clients/auth/auth.dart';
 import 'package:ritual_cafe/collections/collections.dart';
 import 'package:ritual_cafe/collections/colors.dart';
 import 'package:ritual_cafe/collections/pagner.dart';
-import 'package:ritual_cafe/models/json/collectionjson.dart';
+import 'package:ritual_cafe/loadding.dart';
+import 'package:ritual_cafe/models/ResponseUser.dart';
+import 'package:ritual_cafe/profil/profil.dart';
 import 'package:ritual_cafe/services/services.dart';
 import 'package:provider/provider.dart';
+import 'package:ritual_cafe/setting/setting.dart';
 
 class Home extends StatelessWidget {
  final  Services serv;
@@ -58,14 +62,15 @@ class _HomeFullState extends State<HomeFull> {
   }
   @override
     Widget build(BuildContext context) {
-
-      PageController _pageController = PageController(
+      
+              PageController _pageController = PageController(
            initialPage: widget.serv.selectedIndex ,
         keepPage: true,
       );
     return  Consumer<Services>(
         builder: (context,servs,_)=>
-            Scaffold(
+          Scaffold(
+
               /*
               appBar: AppBar(
                 title: Text(widget.serv.selectedIndex.toString()+"/"+servs.selectedIndex.toString()),
@@ -82,25 +87,17 @@ class _HomeFullState extends State<HomeFull> {
                 children: [
                   Collections(servs),
                   Pagner(servs),
-                  Center(
-                    child: Container(
-                      child: Text("Compte",style: TextStyle(color: Colors.white),),
-                    ),
-                  ),
-                  Center(
-                    child: Container(
-                      child: Text("Settings",style: TextStyle(color: Colors.white),),
-                    ),
-                  ),
+                  Profil(servs),
+                  Settings(servs),
                   //ListFormationInscri(widget.serv),
                   //ListFormationFini(widget.serv),
                   // CV(widget.user),
                 ],
               ),
               bottomNavigationBar: navyBottomBar(servs,_pageController),
-            )
+            ));
 
-    );
+                    
 
   }
      Widget navyBottomBar(Services servs,PageController pageController) {
@@ -137,15 +134,5 @@ class _HomeFullState extends State<HomeFull> {
       unselectedItemColor:secondaryTextColor,
     );
   }
- String createNote(List<Avis >avis){
-      String note = '';
-      double notes = 0;
-      for(int i = 0;i<avis.length;i++){
-        notes = notes + avis[i].note;
-      }
-      if(avis.length>0) notes = notes/avis.length;
-      note = notes.toStringAsPrecision(1);
-      note = note.split('.').length >1? note.split('.')[0]  + ','+note.split('.')[1] : note;
-      return note;
-    }
+ 
 }

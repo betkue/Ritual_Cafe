@@ -10,17 +10,19 @@ import '../../loadding.dart';
 import 'decoration.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 class Auth extends StatelessWidget {
-  const Auth();
+  Services servs;
+  Auth(this.servs);
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(value:Services(UserBdd("NULL")),
-    child: AuthFull(),
+    return ChangeNotifierProvider.value(value:this.servs,
+    child: AuthFull(this.servs),
     );
   }
 }
 class AuthFull extends StatefulWidget {
-  const AuthFull();
+  Services servs;
+ AuthFull(this.servs);
 
   @override
   _AuthFullState createState() => _AuthFullState();
@@ -141,8 +143,7 @@ class _AuthFullState extends State<AuthFull> {
                       {
                         snack(result.message,
                             Icon(Icons.check, color: validerColor,));
-                       Navigator.of(context).pushNamedAndRemoveUntil('/',
-                       (Route<dynamic> route) => false);
+                       Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
 
                       }
                       else
@@ -178,7 +179,6 @@ class _AuthFullState extends State<AuthFull> {
                   if (formKey.currentState.validate()) {
 
                     servs.send  = true;
-                    UserBdd user = UserBdd(passController.text);
                     ResponseSend result = await servs.connexion(passController.text,mailController.text);
                     
                     if(result.etat)
@@ -186,8 +186,7 @@ class _AuthFullState extends State<AuthFull> {
 
                       snack(result.message,
                           Icon(Icons.check, color: validerColor,));
-                     Navigator.of(context).pushNamedAndRemoveUntil('/',
-                      (Route<dynamic> route) => false);
+                     Navigator.of(context).pushNamedAndRemoveUntil('/',(Route<dynamic> route) => false);
 
                     }
                     else
@@ -316,10 +315,8 @@ class _AuthFullState extends State<AuthFull> {
         padding: const EdgeInsets.only(top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
         child:  InternationalPhoneNumberInput(
           onInputChanged: (PhoneNumber number) {
-            print(number.phoneNumber);
           },
           onInputValidated: (bool value) {
-            print(value);
           },
           selectorConfig: SelectorConfig(
             selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
@@ -339,7 +336,6 @@ class _AuthFullState extends State<AuthFull> {
               borderRadius:BorderRadius.all(Radius.circular(10.0))),
           inputDecoration: textInputDecoration.copyWith(hintText: 'Phone',),
           onSaved: (PhoneNumber number) {
-            print('On Saved: $number');
             phoneController.text = number.toString();
           },
         ),

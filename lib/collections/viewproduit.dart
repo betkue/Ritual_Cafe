@@ -92,7 +92,6 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                   
                   options.add(new OptionalValue(variante.name, false))  ;
                 }
-                print(options);
               }
         v.add(new VarrianteValue(variante.name,options,value, choisi,nbr));
         
@@ -133,15 +132,13 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
             setState(() {
               valid = false;
               viewAlert[i] = true;
-              print("***************************affiche****************************************");
-            });
+             });
           }
           else
           {
             setState(() {
               viewAlert[i] = false;
-              print("**************************cache*************************************************");
-            });
+              });
           }
           
         }
@@ -270,7 +267,6 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                       onTap:(){
                        if (nombre > 1) setState(() {
                         nombre--;
-                         print(nombre);
                          });
                       },
                       child: Container(
@@ -289,7 +285,6 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                         setState(() {
                           nombre++;
                         });
-                        print(nombre);
                       },
                       child: Container(
                         
@@ -528,7 +523,7 @@ List<Widget>grandeDescription(List<String> a){
                                         onTap: () {
                                           setState(() {
                                             viewVariant[indexFirst] = !viewVariant[indexFirst];
-                                            print(viewVariant[indexFirst]);
+                                            
                                           });
                                         },
                                         child: Icon(viewVariant[indexFirst]
@@ -559,8 +554,7 @@ List<Widget>grandeDescription(List<String> a){
                                                     onChanged: (bool value){
                                                       if(optionsParameters[indexFirst].actualChoice<optionsParameters[indexFirst].maxChoice)
                                                       {
-                                                        print(varriantes[indexFirst].options[index].price);
-
+                                                      
                                                         setState(() {
                                                           optionsParameters[indexFirst].optionValue[index]? optionsParameters[indexFirst].actualChoice--
                                                               :
@@ -568,8 +562,6 @@ List<Widget>grandeDescription(List<String> a){
                                                           optionsParameters[indexFirst].optionValue[index] = value;
                                                         });
 
-                                                        print(price);
-                                                        print(priceadd);
                                                       }
                                                       else{
                                                         setState(() {
@@ -591,8 +583,7 @@ List<Widget>grandeDescription(List<String> a){
                                                         price =varriantes[indexFirst].options[index].price;
                                                       });
 
-                                                      print(optionsParameters[indexFirst].actualChoice.toString()+"??????"+optionsParameters[indexFirst].maxChoice.toString());
-                                                    }
+                                                     }
                                                 ),
                                                 title:  Text(varriantes[indexFirst].options[index].name,style: TextStyle(color: principalTextColor),),
                                                 trailing:
@@ -687,7 +678,6 @@ List<Widget>grandeDescription(List<String> a){
                                         onTap: () {
                                           setState(() {
                                             viewVariant[i] = !viewVariant[i];
-                                            print(viewVariant[i]);
                                           });
                                         },
                                         child: Icon(viewVariant[i]
@@ -745,8 +735,7 @@ List<Widget>grandeDescription(List<String> a){
                                                           });
                                                       }
 
-                                                      print(optionsParameters[i].actualChoice.toString()+"??????"+optionsParameters[i].maxChoice.toString());
-                                                    }
+                                                   }
                                                 ) ,
                                                 title:  Text(varriantes[i].options[index].name,style: TextStyle(color: principalTextColor),),
                                                 trailing:

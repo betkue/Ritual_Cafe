@@ -71,7 +71,16 @@ class _CollectionFullState extends State<CollectionFull> {
                     title:Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.grid_view,color: secondaryTextColor,),
+                        
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(15.0),
+                          child: Image.asset(
+                            'assets/logo.jpg',
+                            fit: BoxFit.cover,
+                            height: 40,
+                            width: 40,
+                          ),
+                        ),
                         Container(
                             padding: const EdgeInsets.all(8.0), child:
                             Text( "Ritual Café",
@@ -80,14 +89,21 @@ class _CollectionFullState extends State<CollectionFull> {
                               fontWeight: FontWeight.bold,
                               fontSize: 36
                           ),)),
+                       
                         ClipRRect(
                           borderRadius: BorderRadius.circular(15.0),
-                          child: Image.asset(
-                            'assets/img.jpg',
-                            fit: BoxFit.cover,
-                            height: 40,
-                            width: 40,
-                          ),
+                          child: 
+                           CachedNetworkImage(
+                               imageUrl: servs.registerUser.profilePicture!=null?servs.registerUser.profilePicture:'https://ssscompagnie.com/images/le_systeme/1.jpg',//
+                               placeholder: (context, url) =>
+                                   Center(child: CircularProgressIndicator()),
+                               errorWidget: (context, url, error) => Icon(Icons.error),
+                               height: 40,
+                               width: 40,
+                               fit: BoxFit.cover,
+
+                             )
+                          
                         )
                       ],
 
@@ -369,8 +385,17 @@ class _CollectionFullState extends State<CollectionFull> {
                     centerTitle: true,
                     title:Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(Icons.grid_view,color: secondaryTextColor,),
+                      children:[
+                        
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(15.0),
+                          child: Image.asset(
+                            'assets/logo.jpg',
+                            fit: BoxFit.cover,
+                            height: 40,
+                            width: 40,
+                          ),
+                        ),
                         Container(
                             padding: const EdgeInsets.all(8.0), child:
                             Text( "Ritual Café",
@@ -379,15 +404,23 @@ class _CollectionFullState extends State<CollectionFull> {
                               fontWeight: FontWeight.bold,
                               fontSize: 36
                           ),)),
+                          
                         ClipRRect(
                           borderRadius: BorderRadius.circular(15.0),
-                          child: Image.asset(
-                            'assets/img.jpg',
-                            fit: BoxFit.cover,
-                            height: 40,
-                            width: 40,
-                          ),
-                        )
+                          child:
+                             CachedNetworkImage(
+                               imageUrl: servs.registerUser.profilePicture!=null?servs.registerUser.profilePicture:'https://ssscompagnie.com/images/le_systeme/1.jpg',//
+                               placeholder: (context, url) =>
+                                   Center(child: CircularProgressIndicator()),
+                               errorWidget: (context, url, error) => Icon(Icons.error),
+                               height: 40,
+                               width: 40,
+                               fit: BoxFit.cover,
+
+                             )
+                            
+                          
+                        ) 
                       ],
 
                     ) ,

@@ -7,6 +7,7 @@ import 'package:ritual_cafe/collections/colors.dart';
 import 'package:ritual_cafe/models/commande.dart';
 import 'package:ritual_cafe/services/services.dart';
 import 'package:ritual_cafe/clients/auth/decoration.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 class Pagner extends StatelessWidget {
   Services serv;
  Pagner(this.serv);
@@ -116,12 +117,19 @@ class _PagnerFullState extends State<PagnerFull> {
                           ),)),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(15.0),
-                          child: Image.asset(
-                            'assets/img.jpg',
-                            fit: BoxFit.cover,
-                            height: 40,
-                            width: 40,
-                          ),
+                          child: servs.registerUser.profilePicture !='null'?
+                           CachedNetworkImage(
+                               imageUrl: servs.registerUser.profilePicture,//
+                               placeholder: (context, url) =>
+                                   Center(child: CircularProgressIndicator()),
+                               errorWidget: (context, url, error) => Icon(Icons.error),
+                               height: 40,
+                               width: 40,
+                               fit: BoxFit.cover,
+
+                             )
+                            :
+                           Icon(Icons.person,color: principalTextColor,),
                         )
                       ],
 

@@ -1,74 +1,51 @@
 import 'dart:convert';
-JsonUser jsonUserFromJson(String str) => JsonUser.fromJson(json.decode(str));
-String jsonUserToJson(JsonUser data) => json.encode(data.toJson());
-
-Use useFromJson(String str) => Use.fromJson(json.decode(str));
-String useToJson(Use data) => json.encode(data.toJson());
-class JsonUser {
-  Use user;
-  String accessToken;
-
-  JsonUser({this.user, this.accessToken});
-
-  JsonUser.fromJson(Map<String, dynamic> json) {
-    user = json['user'] != null ? new Use.fromJson(json['user']) : null;
-    accessToken = json['access_token'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.user != null) {
-      data['user'] = this.user.toJson();
-    }
-    data['access_token'] = this.accessToken;
-    return data;
-  }
-}
-
-class Use {
+ResponseUpdateUser jsonResponseUpdeteFromJson(String str) => ResponseUpdateUser.fromJson(json.decode(str));
+String jsonResponseUpdeteToJson(ResponseUpdateUser data) => json.encode(data.toJson());
+class ResponseUpdateUser {
   int id;
-  String firstname;
-  String surname;
   String email;
-  String tel;
   String sex;
   String profilePicture;
   Other other;
+  String lastName;
+  String firstName;
+  String phone;
 
-  Use(
+  ResponseUpdateUser(
       {this.id,
-      this.firstname,
-      this.surname,
       this.email,
-      this.tel,
       this.sex,
       this.profilePicture,
-      this.other});
+      this.other,
+      this.lastName,
+      this.firstName,
+      this.phone});
 
-  Use.fromJson(Map<String, dynamic> json) {
+  ResponseUpdateUser.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    firstname = json['firstname'];
-    surname = json['surname'];
     email = json['email'];
-    tel = json['tel'];
     sex = json['sex'];
     profilePicture = json['profile_picture']!= null ?json['profile_picture']:'https://ssscompagnie.com/images/le_systeme/1.jpg';
     other = json['other'];
+    lastName = json['last_name'];
+    firstName = json['first_name'];
+    phone = json['phone'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['firstname'] = this.firstname;
-    data['surname'] = this.surname;
     data['email'] = this.email;
-    data['tel'] = this.tel;
     data['sex'] = this.sex;
     data['profile_picture'] = this.profilePicture;
     data['other'] = this.other;
+    data['last_name'] = this.lastName;
+    data['first_name'] = this.firstName;
+    data['phone'] = this.phone;
     return data;
   }
 }
+
 
 class Other {
   Payments payments;

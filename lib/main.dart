@@ -9,6 +9,8 @@ import 'bdd/bdd.dart';
 import 'clients/auth/auth.dart';
 import 'loadding.dart';
 
+import 'package:ritual_cafe/models/json/responseUpdateUser.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -54,18 +56,36 @@ class _MyHomePageState extends State<MyHomePage> {
 
               List<UserBdd>  users = snapshot.data;
               UserBdd user = users[0];
-              print("code bdd = "+user.code);
-             // print(user.code);
+               Services serv  = Services(user);
               if(user.code=="NULL")//si pas d'utilisateur enregistré
                   {//aller a l'authentificatiion
-                return Auth();
+                return Auth(serv);
               }
               else//sinon
                   {
-                    print("activer collection");
                 //pour toujours avoir le mail d'utilisateur en cas de besoin
-                Services serv  = Services(user);
-                return Home(serv);
+               
+                return   FutureBuilder<ResponseUpdateUser>(
+                        future: serv.getUser(serv.user.code),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<ResponseUpdateUser> snapshot){
+                              if (snapshot.hasData) {
+
+                                
+                               
+                                
+                                  if ( snapshot.data.id != null) {
+                                    return Home(serv);
+                                  } else {
+                                    return Auth(serv);
+                                  }
+                              }
+                              else{
+                                  return Loadding();
+                              }
+
+
+                            }); //Home(serv);
               }
 
             }
