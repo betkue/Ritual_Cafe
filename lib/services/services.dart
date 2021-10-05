@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ritual_cafe/models/commande.dart';
 import 'package:ritual_cafe/models/json/collectionjson.dart';
+import 'package:ritual_cafe/models/json/company.dart';
 import 'package:ritual_cafe/models/json/errorconnexion.dart';
 import 'package:ritual_cafe/models/json/errorlogin.dart';
 import 'package:ritual_cafe/models/json/jsonuser.dart';
@@ -23,6 +26,7 @@ class Services with ChangeNotifier {
       DataBase.instance.updateUser(use,user.code);
     
   }
+  String _companyId = "403";
 
   //user register
   ResponseUpdateUser _registerUser = ResponseUpdateUser();//user initial
@@ -30,6 +34,15 @@ class Services with ChangeNotifier {
   set registerUser(ResponseUpdateUser a)
   {
     _registerUser = a;
+    notifyListeners();
+  }
+
+    //company
+  Company _company = Company();//user initial
+  get company  =>_registerUser;
+  set company (Company a)
+  {
+    _company = a;
     notifyListeners();
   }
 //log determine si nous sommes en connexion ou inscripetion
@@ -253,7 +266,8 @@ List<Commande> _commandes = [];
            body: {
             
              "firstname":user.firstName,
-              "lastname": user.lastName,
+              "lastname" :user.lastName,
+              "surame" :user.lastName,
               "email": user.email,
               "tel": user.phone, 
               "sex": user.sex,
@@ -285,4 +299,222 @@ List<Commande> _commandes = [];
 
   }
 
+   Future<Company> getCompany(String token)async{
+      //List<UserBdd> users = await DataBase.instance.user();
+        
+      http.Response response = await http.get(
+    //Uri.parse("https://dashboard.mystore.lamater.net/api/2021-05/user?company_id=430"),
+    //              https://dashboard.genuka.com/api/2021-05/user?company_id=430
+        Uri.parse("https://dashboard.mystore.lamater.net/api/2021-05/companies/details/403"),
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Accept": "application/json"
+        },
+    );
+
+
+ 
+
+   switch (response.statusCode) {
+      case 200 :
+        final String responsestring  = response.body;
+        Company result = jsonCompanyFromJson(responsestring);
+        _company = result;
+        notifyListeners();
+        return  _company;
+        break;
+      case 403 :
+        return Company();
+        break;
+      default:
+        return  Company();
+
+    }
+
+  }
+  Future<String>  commander(String nom, String prenom,String mail, String tel, String adresse,String note)async
+    {
+            final  url = Uri.https('dashboard.genuka.com','api/2021-05/commands');
+
+          //final  url = Uri.http('192.168.43.253','cafe/index.php');
+    var data = {
+                "client_email": mail,
+                "restaurant_id": _companyId,
+                "reduction":null.toString(),
+                "total": (_total + double.parse(_company.tarifLivraison)).toString(), // Frais de livraison
+                "subtotal": _total.toString(),
+                "livraison": _company.tarifLivraison.toString(),// Frais de livraison
+                "shipping": {
+                    "address_type": 2.toString(),
+                    "address_id":adresse,
+                    "address": adresse,
+                    "date":DateTime.now().toString(),
+                    "state": 0.toString(),
+                    // "mode" : provider.cart.shippingDateMode,
+                    "mode":'Home delivery',
+                    "human_date": DateTime.now().toString(),
+                },
+                "payment": {
+                    "address_type": 2.toString(),
+                    "address_id": null.toString(),
+                    "address": null.toString(),
+                    "mode": "cash",
+                    "state": 0.toString(),
+                },
+                "note": note,
+                "source": "Express/App",
+                "produits": _commandes
+                    .map((Commande produit) {
+                        return {
+                            "id": produit.id.toString(),
+                            "quantity": produit.nombre.toString(),
+                            "price": (produit.price+produit.priceadd).toString(),
+                            "add_to_cart_date": DateTime.now().toString(),
+                            "properties": {
+                                "complement": "test",
+                                "note": note
+                            }
+                        };
+                    }).toList()
+            };
+            print(data);
+        
+    var response =  await http.post(
+        url,
+        body:json.encode(data)
+        
+        );
+         print(response.statusCode);
+      //   print(response.body);
+         
+         return response.body;
+
+
+    }
+
+
 }
+
+/*    Future<String>  commander(String nom, String prenom,String mail, String tel, String adresse,String note)async
+    {
+            final  url = Uri.https('dashboard.genuka.com','api/2021-05/commands');
+
+          //final  url = Uri.http('192.168.43.253','cafe/index.php');
+    var data = {
+                "client_email": mail,
+                "restaurant_id": _companyId,
+                "reduction":null.toString(),
+                "total": (_total + double.parse(_company.tarifLivraison)).toString(), // Frais de livraison
+                "subtotal": _total.toString(),
+                "livraison": _company.tarifLivraison.toString(),// Frais de livraison
+                "shipping": {
+                    "address_type": 2.toString(),
+                    "address_id":adresse,
+                    "address": adresse,
+                    "date":DateTime.now().toString(),
+                    "state": 0.toString(),
+                    // "mode" : provider.cart.shippingDateMode,
+                    "mode":'Home delivery',
+                    "human_date": DateTime.now().toString(),
+                },
+                "payment": {
+                    "address_type": 2.toString(),
+                    "address_id": null.toString(),
+                    "address": null.toString(),
+                    "mode": "cash",
+                    "state": 0.toString(),
+                },
+                "note": note,
+                "source": "Express/App",
+                "produits": _commandes
+                    .map((Commande produit) {
+                        return {
+                            "id": produit.id.toString(),
+                            "quantity": produit.nombre.toString(),
+                            "price": (produit.price+produit.priceadd).toString(),
+                            "add_to_cart_date": DateTime.now().toString(),
+                            "properties": {
+                                "complement": "test",
+                                "note": note
+                            }
+                        };
+                    }).toList()
+            };
+        
+    var response =  await http.post(
+        url,
+        body:json.encode(data)
+        
+        );
+         print(response.statusCode);
+         print(response.body);
+         
+         return response.body;
+
+
+    } */
+
+
+    /**
+     *     Future<String>  commander(String nom, String prenom,String mail, String tel, String adresse,String note)async
+    {
+            final  url = Uri.https('dashboard.genuka.com','api/2020-04/commands');
+
+          //final  url = Uri.http('192.168.43.253','cafe/index.php');
+    var data = {
+                "client_email": mail,
+                 "client_details": {
+                      "nom": nom,
+                      "prenom":prenom,
+                      "email": mail,
+                      "tel": tel
+                  },
+                "restaurant_id": _companyId,
+                "reduction":null.toString(),
+                "total": (_total + double.parse(_company.tarifLivraison)).toString(), // Frais de livraison
+                "subtotal": _total.toString(),
+                "livraison": _company.tarifLivraison.toString(),// Frais de livraison
+                "shipping": {
+                    "state": 0,
+                    "date": "",
+                    "human_date": "",
+                    "address_type" : 1,
+                    "address": "",
+                    "mode": "home delivery"
+                },
+                "payment": {
+                    "mode": "cash",
+                    "state": 0
+                },
+                "note": note,
+                "source": "Express/App",
+                "produits": _commandes
+                    .map((Commande produit) {
+                        return {
+                            "id": produit.id.toString(),
+                            "quantity": produit.nombre.toString(),
+                            "price": (produit.price+produit.priceadd).toString(),
+                            "add_to_cart_date": DateTime.now().toString(),
+                            "properties": {
+                                "complement": "test",
+                                "note": note
+                            }
+                        };
+                    }).toList()
+            };
+        
+    var response =  await http.post(
+        url,
+        body:json.encode(data)
+        
+        );
+         print(response.statusCode);
+         print(response.body);
+         
+         return response.body;
+
+
+    }
+
+
+     */

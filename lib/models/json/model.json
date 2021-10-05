@@ -1,0 +1,87 @@
+{
+    "client_email": "provider.user.email",
+    "restaurant_id": "provider.cart.entreprise.id.toString()",
+    "reduction": {
+      "id": "this.id.toString()",
+      "code": "this.code",
+      "type": "this.type",
+      "value": "this.value.toString()",
+      "seuil": "this.seuil.toString()",
+      "mesure": "this.mesure",
+      "state": "this.state",
+      "start_date": "this.startDate.toString()",
+      "end_date": "this.endDate.toString()",
+      "nbUses": "this.nbUses.toString()"
+    },
+    "total": "provider.cart.total.toString()",
+    "subtotal": "provider.cart.subtotal.toString()",
+    "livraison": "provider.cart.shippingFee.toString()",
+    "shipping": {
+      "address_type": 2,
+      "address_id": "provider.cart.shippingAddress == null ? null : provider.cart.shippingAddress.id",
+      "address": {
+        "id": "this.id.toString()",
+        "label": "this.label.toString()",
+        "street": "this.street.toString()",
+        "postal_code": "this.postalCode.toString()",
+        "region": "this.region.toString()",
+        "ville_id": "this.ville.toString()",
+        "city": "this.city.toString()",
+        "country": "this.country.toString()",
+        "additional_address": "this.additionalAddress.toString()",
+        "is_billing": "this.isBilling",
+        "is_shipping": "this.isShipping",
+        "is_primary": true,
+        "given_name": "this.givenName.toString()",
+        "family_name": "this.familyName.toString()",
+        "organization": "this.organization.toString()",
+        "attributes": "json.encode(this.attributes)"
+      },
+      "date": "provider.cart.shippingDate.millisecondsSinceEpoch.toString()",
+      "state": 0,
+      "mode": "provider.cart.shippingMode == ShippingMode.collect ? 'Réservation' : 'Home delivery'",
+      "human_date": "provider.cart.shippingDate.toString()"
+    },
+    "payment": {
+      "address_type": 2,
+      "address_id": "billingAddress != null ? billingAddress.id.toString() : null",
+      "address": {
+        "id": "this.id.toString()",
+        "label": "this.label.toString()",
+        "street": "this.street.toString()",
+        "postal_code": "this.postalCode.toString()",
+        "region": "this.region.toString()",
+        "ville_id": "this.ville.toString()",
+        "city": "this.city.toString()",
+        "country": "this.country.toString()",
+        "additional_address": "this.additionalAddress.toString()",
+        "is_billing": "this.isBilling",
+        "is_shipping": "this.isShipping",
+        "is_primary": true,
+        "given_name": "this.givenName.toString()",
+        "family_name": "this.familyName.toString()",
+        "organization": "this.organization.toString()",
+        "attributes": "json.encode(this.attributes)"
+      },
+      "mode": "provider.cart.paymentModeString(paymentMode)",
+      "state": 0
+    },
+    "note": "provider.cart.note",
+    "source": "Market/App",
+    "datas": {
+      "device": {
+        "token": "device_infos['firebase_cloud_messaging_token']",
+        "platform": "device_infos['platform']"
+      }
+    },
+    "produits": {
+      "id": "produitCommande.produit.id.toString()",
+      "quantity": "produitCommande.quantite.toString()",
+      "price": "produitCommande.price.toString()",
+      "add_to_cart_date": "produitCommande.dateCommande.toString()",
+      "properties": {
+        "complement": "produitCommande.complement",
+        "note": "produitCommande.note"
+      }
+    }
+  }

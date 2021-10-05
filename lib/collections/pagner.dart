@@ -4,7 +4,9 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:ritual_cafe/collections/colors.dart';
+import 'package:ritual_cafe/loadding.dart';
 import 'package:ritual_cafe/models/commande.dart';
+import 'package:ritual_cafe/models/json/company.dart';
 import 'package:ritual_cafe/services/services.dart';
 import 'package:ritual_cafe/clients/auth/decoration.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -28,6 +30,7 @@ class PagnerFull extends StatefulWidget {
 }
 
 class _PagnerFullState extends State<PagnerFull> {
+  bool send =false;
     Future<void> _dialogDelete(Services servs,int i) async {
     return showDialog<void>(
       context: context,
@@ -89,7 +92,7 @@ class _PagnerFullState extends State<PagnerFull> {
     //price = produit.price;
 
    double width = MediaQuery .of(context).size.width;
-    return  Consumer<Services>(
+    return send? Loadding() : Consumer<Services>(
         builder: (contextConsumer,servs,_)=> 
         Scaffold(
           backgroundColor: Colors.black,
@@ -186,7 +189,36 @@ class _PagnerFullState extends State<PagnerFull> {
                     ),
                     
                         GestureDetector(
-                          onTap: (){
+                          onTap: ()async{
+                                if (servs.total > 0) {
+
+                                    setState(() {
+                                    send = true;
+                                  });
+                                  Company result = await servs.getCompany(servs.user.code);
+                                  if (result.id != null) {
+                                     Navigator.pushNamed(context,
+                                             '/commander',
+                                             arguments: servs
+                                         );
+                                    
+                                    
+                                  setState(() {
+                                    send = false;
+                                  });
+                                    
+                                  } else {
+                                    snack("Connexion Impossible", width);
+                                    
+                                  setState(() {
+                                    send = false;
+                                  });
+                                  }
+                                  
+                                }
+                            
+
+
                           },
                           child: Container(
                           width: width,

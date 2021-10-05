@@ -54,7 +54,7 @@ class _AuthFullState extends State<AuthFull> {
   final passController = TextEditingController();//password
   bool noView = true;//afficher mot de passe
   String error = "";//en cas d'erreur
-  String code = "+237";
+ // String code = "+237";
   RegExp regExp =    new RegExp(r"^[a-zA-Z0-9._\-*ù^&éè#!§]+@[a-z0-9._-]+\.[a-z]{2,6}");//verification du mail
   RegExp re = new RegExp(r"^[a-zA-Z]+\s[a-zA-Z]+$");//regex nom prenom
   String initialCountry = 'CM';
