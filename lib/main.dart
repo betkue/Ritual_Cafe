@@ -5,7 +5,9 @@ import 'package:ritual_cafe/collections/pagner.dart';
 import 'package:ritual_cafe/collections/updateProduit.dart';
 import 'package:ritual_cafe/collections/viewproduit.dart';
 import 'package:ritual_cafe/models/user.dart';
+import 'package:ritual_cafe/profil/updatephoto.dart';
 import 'package:ritual_cafe/services/services.dart';
+import 'package:ritual_cafe/setting/commandehistory.dart';
 import 'bdd/bdd.dart';
 import 'clients/auth/auth.dart';
 import 'loadding.dart';
@@ -115,8 +117,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) => Home(settings.arguments));
       case '/update' :
         return MaterialPageRoute(builder: (context) => UpdateProduit(settings.arguments));
+      case '/updatephoto' :
+        return MaterialPageRoute(builder: (context) => UpdatePhoto(settings.arguments));
       case '/commander' :
         return MaterialPageRoute(builder: (context) => Commander(settings.arguments));
+      case '/commandehistory' :
+        return MaterialPageRoute(builder: (context) => CommandeHistory(settings.arguments));
 
       default:
         return MaterialPageRoute(

@@ -10,7 +10,13 @@ class Commande {
   int nombre;
   int prixTotal;
   String tag;
-  Commande(this.id,this.indexCollection,this.indexProduit,this.tag,this.nom,this.image,this.nombre,this.price,this.priceadd,this.prixTotal,this.varriantes);
+  String  complement;
+  String date;
+  String note;
+  int idCommande;
+  Commande(this.id,this.indexCollection,this.indexProduit,this.tag,this.nom,
+  this.image,this.nombre,this.price,this.priceadd,this.prixTotal,
+  this.varriantes,this.complement,this.date,this.note,this.idCommande);
 }
 class OptionalValue{
   String nom;

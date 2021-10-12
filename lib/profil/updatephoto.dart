@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:ritual_cafe/models/json/responseUpdateUser.dart';
@@ -11,32 +9,29 @@ import 'package:ritual_cafe/collections/colors.dart';
 import 'package:ritual_cafe/loadding.dart';
 import 'package:ritual_cafe/services/services.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
-class Profil extends StatelessWidget {
+class UpdatePhoto extends StatelessWidget {
  final  Services serv;
-   Profil(this.serv);
+   UpdatePhoto(this.serv);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(value:this.serv,
-      child:ProfilFull(serv) ,
+      child:UpdatePhotoFull(serv) ,
     );
   }
 }
-class ProfilFull extends StatefulWidget {
+class UpdatePhotoFull extends StatefulWidget {
   final Services serv;
-   ProfilFull(this.serv);
+   UpdatePhotoFull(this.serv);
 
   @override
-  _ProfilFullState createState() => _ProfilFullState();
+  _UpdatePhotoFullState createState() => _UpdatePhotoFullState();
 }
 
-class _ProfilFullState extends State<ProfilFull> {
-  File _image;
-  final picker = ImagePicker();
+class _UpdatePhotoFullState extends State<UpdatePhotoFull> {
    void snack(String a, Widget b) {
     SnackBar snackbar =  SnackBar(
       content:
@@ -62,10 +57,6 @@ class _ProfilFullState extends State<ProfilFull> {
    
    
     if (result.id!=null) {
-      setState(() {
-        edit =false;
-      });
-      
                         snack("Updated",
                             Icon(Icons.check, color: validerColor,));
       
@@ -96,7 +87,6 @@ class _ProfilFullState extends State<ProfilFull> {
   RegExp regExp =    new RegExp(r"^[a-zA-Z0-9._\-*ù^&éè#!§]+@[a-z0-9._-]+\.[a-z]{2,6}");//verification du mail
   
   PhoneNumber number = PhoneNumber(isoCode: 'CM');
- bool edit = false;
  bool send = false;
    @override
   void dispose() {
@@ -123,7 +113,7 @@ class _ProfilFullState extends State<ProfilFull> {
               */
               
                   backgroundColor: Colors.black,
-              body:edit?
+              body:
               ListView(
                 children: [
                   Container(
@@ -137,7 +127,38 @@ class _ProfilFullState extends State<ProfilFull> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children :[
-                                                    
+                        
+                              Padding(
+                                padding: const EdgeInsets.only(left: 16),
+                                child: Text("Prénom",textAlign: TextAlign.start,
+                                  style: TextStyle(color: principalTextColor,fontSize: 15,
+                                  ),),
+                              ),
+                             Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
+                                child:
+                                TextFormField(
+                                  cursorColor: principalTextColor,
+                                  keyboardType: TextInputType.emailAddress,
+                                  controller: prenomController,
+                                  style:TextStyle(
+                                      color: principalTextColor,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                  decoration:textInputDecoration.copyWith(hintText: 'Prénom'),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      
+                                    setState(() {
+                                      prenomController.text = user.firstName;
+                                    });
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            
                               Padding(
                                 padding: const EdgeInsets.only(left: 16),
                                 child: Text("Nom",textAlign: TextAlign.start,
@@ -169,37 +190,6 @@ class _ProfilFullState extends State<ProfilFull> {
                                 ),
                               ),
                             
-                              Padding(
-                                padding: const EdgeInsets.only(left: 16),
-                                child: Text("Prénom",textAlign: TextAlign.start,
-                                  style: TextStyle(color: principalTextColor,fontSize: 15,
-                                  ),),
-                              ),
-                             Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
-                                child:
-                                TextFormField(
-                                  cursorColor: principalTextColor,
-                                  keyboardType: TextInputType.emailAddress,
-                                  controller: prenomController,
-                                  style:TextStyle(
-                                      color: principalTextColor,
-                                      fontWeight: FontWeight.bold
-                                  ),
-                                  decoration:textInputDecoration.copyWith(hintText: 'Prénom'),
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      
-                                    setState(() {
-                                      prenomController.text = user.firstName;
-                                    });
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-
                              Padding(
                                 padding: const EdgeInsets.only(left: 16),
                                 child: Text("Email",textAlign: TextAlign.start,
@@ -333,9 +323,6 @@ class _ProfilFullState extends State<ProfilFull> {
                              Padding(padding: EdgeInsets.all(15),
                                   child: GestureDetector(
                     onTap: (){
-                      setState(() {
-                        edit = false;
-                      });
                     },
                     child: Center(
                     child: Container(
@@ -357,129 +344,6 @@ class _ProfilFullState extends State<ProfilFull> {
                 ],
               )
 
-              :
-               ListView(
-                
-                children: [
-                  Column(
-                    children: [
-                     GestureDetector(
-                       onTap: ()async{/*
-                          Navigator.of(context).pushNamed('/updatephoto',
-                          arguments: widget.serv);*/
-                              final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-                              setState(() {
-                                _image = File(pickedFile.path);
-                              });
-                                  List<int> imageBytes =  _image.readAsBytesSync();
-                                  String  base64Image = base64Encode(imageBytes);
-                                  setState(() {
-                                    send = true;
-                                  });
-                                ResponseUpdateUser result = await servs.updatePhoto( base64Image);
-                                
-                                          if (result.id!=null) {
-                                            
-                                                              snack("Updated",
-                                                                  Icon(Icons.check, color: validerColor,));
-                                            
-                                          } 
-                                          else {
-                                            
-                                                              snack("Echec connexion",
-                                                                  Icon(Icons.details, color: errorTextColor,));
-                                          }
-                                setState(() {
-                                    send = false;
-                                  });
-  
-                       },
-                       child:  Center(
-                        child: ClipRRect(
-                              borderRadius: BorderRadius.circular(150.0),
-                              child: 
-                               CachedNetworkImage(
-                                   imageUrl: servs.registerUser.profilePicture!=null?servs.registerUser.profilePicture:'https://ssscompagnie.com/images/le_systeme/1.jpg',//
-                                   placeholder: (context, url) =>
-                                       Center(child: CircularProgressIndicator()),
-                                   errorWidget: (context, url, error) => Icon(Icons.error),
-                                   height: 150,
-                                   width: 150,
-                                   fit: BoxFit.cover,
-
-                                 )
-                              
-                            ),
-                      ),
-                     ),
-                      Padding(padding: EdgeInsets.all(15),
-                      child: Text(user.id!=null?user.id.toString():" . . . ",style: TextStyle(color: primaryColor,fontWeight: FontWeight.bold,fontStyle: FontStyle.italic),),),
-                    ],
-                  ),
-
-                  
-
-                  
-                   Padding(padding: EdgeInsets.all(15),
-                  child: Row(
-                      children: [
-                        Text("Nom : ",style: TextStyle(color: primaryColor,fontWeight: FontWeight.bold),),
-                        Text(user.lastName!=null?user.lastName:" . . . ",style: TextStyle(color: principalTextColor60),),
-                      ],
-                  )),
-                      Padding(padding: EdgeInsets.all(15),
-                  child: Row(
-                      children: [
-                        Text("Prénom : ",style: TextStyle(color: primaryColor,fontWeight: FontWeight.bold),),
-                        Text(user.firstName!=null?user.firstName:" . . . ",style: TextStyle(color: principalTextColor60 ),),
-                      ],
-                  )),
-                  
-                   Padding(padding: EdgeInsets.all(15),
-                  child: Row(
-                      children: [
-                        Text("Email : ",style: TextStyle(color: primaryColor,fontWeight: FontWeight.bold),),
-                        Text(user.email!=null?user.email:" . . . ",style: TextStyle(color: principalTextColor60),),
-                      ],
-                  )),
-
-                   Padding(padding: EdgeInsets.all(15),
-                  child: Row(
-                      children: [
-                        Text("Tel : ",style: TextStyle(color: primaryColor,fontWeight: FontWeight.bold),),
-                        Text(user.phone!=null?user.phone:" . . . ",style: TextStyle(color: principalTextColor60),),
-                      ],
-                  )),
-
-                   Padding(padding: EdgeInsets.all(15),
-                  child: Row(
-                      children: [
-                        Text("Sexe : ",style: TextStyle(color: primaryColor,fontWeight: FontWeight.bold),),
-                        Text(user.sex!=null?user.sex:" . . . ",style: TextStyle(color: principalTextColor60),),
-                      ],
-                  )),
-
-
-                  Padding(padding: EdgeInsets.all(15),
-                  child: GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        edit = true;
-                      });
-                    },
-                    child: Center(
-                    child: Column(
-                      children: [
-                        Icon(Icons.edit,color: principalTextColor60,size: 20,),
-                        Text("Edit",style: TextStyle(color: primaryColor,fontWeight: FontWeight.bold),),
-                        
-                      ],
-                    )
-                  ),
-                  )),
-                ],
-              )
           
                ));
 

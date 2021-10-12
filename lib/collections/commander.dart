@@ -227,6 +227,9 @@ class _CommanderFullState extends State<CommanderFull> {
                               send = false;
                             });
                               
+                                              
+                          Navigator.of(context).pushNamedAndRemoveUntil('/home',
+                          (Route<dynamic> route) => false,arguments: widget.serv);
                             } else {
                               snack("Connexion Impossible",100);
                               

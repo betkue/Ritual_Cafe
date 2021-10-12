@@ -124,7 +124,7 @@ class _HomeFullState extends State<HomeFull> {
         backgroundColor: secondaryColor//principalTextColor10,
         ),
         BottomNavigationBarItem(
-        icon: Icon(Icons.settings),
+        icon: Icon(Icons.history),
         label: "",
         backgroundColor: secondaryColor//principalTextColor10,
         ),

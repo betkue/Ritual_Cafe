@@ -65,7 +65,8 @@ class _UpdateProduitFullState extends State<UpdateProduitFull> {
   void addCommande(Services servs){
     
    var produit = widget.serv.collections.data[widget.serv.commande[widget.serv.indexCommande].indexCollection].produits[widget.serv.commande[widget.serv.indexCommande].indexProduit] ;
-  
+   String complement = "";
+    String note = "";
     Commande commande = widget.serv.commande[widget.serv.indexCommande];
     
     int prix = price !=0?(price+priceadd+commande.priceadd)*(nombre + commande.nombre):(produit.price+priceadd+commande.priceadd)*(nombre + commande.nombre);
@@ -97,12 +98,19 @@ class _UpdateProduitFullState extends State<UpdateProduitFull> {
                   options.add(new OptionalValue(variante.name, false))  ;
                 }
               }
+              complement = complement + variante.name + " : " + value + ";" + "\n" ;
         v.add(new VarrianteValue(variante.name,options,value, choisi,nbr));
          
         
     }
     
-    Commande commandeUpdated = new Commande(produit.id, servs.commande[servs.indexCommande].indexCollection, servs.commande[servs.indexCommande].indexProduit, produit.tags[0].name,produit.name, produit.medias[0].link, nombre+ commande.nombre, price,priceadd+commande.priceadd,prix ,v);
+    Commande commandeUpdated = new Commande(produit.id,
+     servs.commande[servs.indexCommande].indexCollection,
+      servs.commande[servs.indexCommande].indexProduit, 
+      produit.tags[0].name,produit.name, produit.medias[0].link, 
+      nombre+ commande.nombre, price,priceadd+commande.priceadd,prix ,v,complement,
+      DateTime.now().toString(),note,servs.commande[servs.indexCommande].idCommande
+      );
     
     servs.total = servs.total - commande.prixTotal+ prix;
     servs.updateCommande(servs.indexCommande,commandeUpdated );
@@ -452,13 +460,15 @@ List<Widget>grandeDescription(List<String> a){
     List<Widget> l = [];
     for(int i = 0; i <varriantes.length;i++)
     {
-      viewVariant.add(false);
+      
        viewAlert.add(false);
       optionsParameters.add(OptionParameter(varriantes[i].maxChoices, [],0));
         etatRequiredVarriant.add(false);
       if(varriantes[i].required ) {
         requiredVarriant.add(i);
+        viewVariant.add(true);
       }
+      else{viewVariant.add(false);}
       for(int y = 0; y<varriantes[i].options.length;y++){
         optionsParameters[i].optionValue.add(commande.varriantes[i].options[y].etat);
         if(varriantes[i].options[y].price >0)priceChange = true;

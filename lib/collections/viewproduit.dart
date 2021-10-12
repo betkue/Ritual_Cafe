@@ -66,7 +66,8 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
    var produit = widget.serv.collections.data[widget.serv.indexCollection].produits[widget.serv.indexProduit] ;
     
     int prix = price !=0?(price+priceadd)*nombre:(produit.price+priceadd)*nombre;
-
+    String complement = "";
+    String note = "";
     List<VarrianteValue> v = [];
     for(var i = 0; i < produit.variants.length ;i++) {
       bool choisi = false;
@@ -93,10 +94,15 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                   options.add(new OptionalValue(variante.name, false))  ;
                 }
               }
+              complement = variante.name + " : " + value + ";" + "\n" ;
         v.add(new VarrianteValue(variante.name,options,value, choisi,nbr));
         
     }
-    Commande commande = new Commande(produit.id, servs.indexCollection,servs.indexProduit, produit.tags[0].name,produit.name, produit.medias[0].link, nombre, price,priceadd,prix ,v);
+    Commande commande = new Commande(produit.id, servs.indexCollection,
+    servs.indexProduit, produit.tags[0].name,produit.name, produit.medias[0].link,
+     nombre, price,priceadd,prix ,v,complement,DateTime.now().toString(),note,
+     servs.commande.length
+     );
     
     servs.total = servs.total + prix;
     servs.commande = commande;
@@ -441,13 +447,15 @@ List<Widget>grandeDescription(List<String> a){
     List<Widget> l = [];
     for(int i = 0; i <varriantes.length;i++)
     {
-      viewVariant.add(false);
+     
        viewAlert.add(false);
       optionsParameters.add(OptionParameter(varriantes[i].maxChoices, [],0));
         etatRequiredVarriant.add(false);
       if(varriantes[i].required ) {
         requiredVarriant.add(i);
+         viewVariant.add(true);
       }
+      else{ viewVariant.add(false);}
       for(int y = 0; y<varriantes[i].options.length;y++){
         optionsParameters[i].optionValue.add(false);
         if(varriantes[i].options[y].price >0)priceChange = true;

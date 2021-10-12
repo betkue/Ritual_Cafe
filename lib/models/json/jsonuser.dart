@@ -52,7 +52,7 @@ class Use {
     email = json['email'];
     tel = json['tel'];
     sex = json['sex'];
-    profilePicture = json['profile_picture']!= null ?json['profile_picture']:'https://ssscompagnie.com/images/le_systeme/1.jpg';
+    profilePicture = json['profile_picture']!= null ?json['profile_picture']:'https://betkuetankoua.hostme.space/assets/img/profile.jpg';
     other = json['other'];
   }
 
