@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 
-import 'package:ritual_cafe/models/json/jsonlistecommande.dart';
 Company jsonCompanyFromJson(String str) => Company.fromJson(json.decode(str));
 String jsonCompanyToJson(Company data) => json.encode(data.toJson());
 class Company {

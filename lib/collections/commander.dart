@@ -7,6 +7,7 @@ import 'package:ritual_cafe/collections/colors.dart';
 import 'package:ritual_cafe/loadding.dart';
 import 'package:ritual_cafe/models/json/company.dart';
 import 'package:ritual_cafe/models/json/responseUpdateUser.dart';
+import 'package:ritual_cafe/models/response.dart';
 import 'package:ritual_cafe/services/services.dart';
 import 'package:ritual_cafe/clients/auth/decoration.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -33,6 +34,7 @@ class CommanderFull extends StatefulWidget {
 }
 
 class _CommanderFullState extends State<CommanderFull> {
+  
   RegExp regExp =    new RegExp(r"^[a-zA-Z0-9._\-*ù^&éè#!§]+@[a-z0-9._-]+\.[a-z]{2,6}");//verification du mail
   RegExp re = new RegExp(r"^[a-zA-Z]+\s[a-zA-Z]+$");//regex nom prenom
   bool send =false;
@@ -40,6 +42,7 @@ class _CommanderFullState extends State<CommanderFull> {
   String initialCountry = 'CM';
   String error = "";//en cas d'erreur
   PhoneNumber number = PhoneNumber(isoCode: 'CM');
+  PhoneNumber number2 = PhoneNumber(isoCode: 'CM');
   final formKey = GlobalKey<FormState>();
   final mailController = TextEditingController();//mail
   final phoneController = TextEditingController();//mail
@@ -47,6 +50,8 @@ class _CommanderFullState extends State<CommanderFull> {
   final prenomController = TextEditingController();//prenom nom
   final adresseController = TextEditingController();//prenom nom
   final noteController = TextEditingController();//prenom nom
+  final serviceController = TextEditingController();//orange ou mtn
+  final buyphoneController = TextEditingController();//orange ou mtn
     @override
   void dispose() {
     mailController.dispose();
@@ -55,6 +60,8 @@ class _CommanderFullState extends State<CommanderFull> {
     nomController.dispose();
     adresseController.dispose();
     noteController.dispose();
+    serviceController.dispose();
+    buyphoneController .dispose();
     super.dispose();
   }
   bool noView = true;//afficher mot de passe
@@ -62,23 +69,14 @@ class _CommanderFullState extends State<CommanderFull> {
   void snack(String a,double width) {
     SnackBar snackbar =  SnackBar(
       content:
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
+      
           Container(
             width: width,
             child: Text(a, textAlign: TextAlign.start,
               style: new TextStyle(color: principalTextColor),
-              maxLines: 3,
+              maxLines: 6,
             ),
-          ),
-          Container(
-            width: 20,
-            child: Icon(Icons.cancel,color: errorTextColor,size: 20,),
-          )
-
-        ],
-      ),
+          ) ,
       backgroundColor: Colors.black54,);
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
   } @override
@@ -211,6 +209,16 @@ class _CommanderFullState extends State<CommanderFull> {
                             if (formKey.currentState.validate()) {
                               
                                formKey.currentState.save();
+                               if (serviceController.text.toUpperCase() == "O" ) {
+                                  setState(() {
+                              serviceController.text = "ORANGE";
+                            });
+                               }
+                               if (serviceController.text.toUpperCase() == "M" ) {
+                                  setState(() {
+                              serviceController.text = "MTN";
+                            });
+                               }
                                   setState(() {
                               send = true;
                             }); 
@@ -222,16 +230,17 @@ class _CommanderFullState extends State<CommanderFull> {
                               
                               snack("Commandé", 100);
                               
-                                setState(() {
-                                  send = false;
-                                });
+                                
                                 switch (servs.paiementMode) {
                                 case "Cash": Navigator.of(context).pushNamedAndRemoveUntil('/home',
                                   (Route<dynamic> route) => false,arguments: widget.serv);
+                                  setState(() {
+                                  send = false;
+                                });
                                   break;
                                 case "Paypal":  
                                 
-                                    String url =servs.company.datas.payments.paypal.link;
+                                    String url =  servs.company.datas.payments.paypal.link;
                                 if (await canLaunch(url)) {
                                     await launch(
                                       url,
@@ -244,10 +253,40 @@ class _CommanderFullState extends State<CommanderFull> {
                                   } else {
                                     throw 'Could not launch $url';
                                   }
+                                  setState(() {
+                                  send = false;
+                                });
+                                 Navigator.of(context).pushNamedAndRemoveUntil('/home',
+                                  (Route<dynamic> route) => false,arguments: widget.serv);
                                   break;
                                 case "Mobile Money":
+                                ResponseSend result = await servs.buyMobile(buyphoneController.text, serviceController.text);
+                                    if (result.etat) {
+                                      
+                                     snack(result.message, 100);
+                                     
+                                 Navigator.of(context).pushNamedAndRemoveUntil('/home',
+                                  (Route<dynamic> route) => false,arguments: widget.serv);
+                                      
+                                    } else {
+                                      
+                                    snack(result.message, 100);
+                                    
+                                 Navigator.of(context).pushNamedAndRemoveUntil('/home',
+                                  (Route<dynamic> route) => false,arguments: widget.serv);
+                                    }
+                                    setState(() {
+                                  send = false;
+                                });
+
                                   break;
                                 case "Credit Card":
+                                
+                                    setState(() {
+                                  send = false;
+                                });
+                                 Navigator.of(context).pushNamedAndRemoveUntil('/home',
+                                  (Route<dynamic> route) => false,arguments: widget.serv);
                                   break;
                                 default: Navigator.of(context).pushNamedAndRemoveUntil('/home',
                                   (Route<dynamic> route) => false,arguments: widget.serv);
@@ -395,6 +434,7 @@ class _CommanderFullState extends State<CommanderFull> {
                                         onInputChanged: (PhoneNumber number) {
                                         },
                                         onInputValidated: (bool value) {
+                                          
                                         },
                                         selectorConfig: SelectorConfig(
                                           selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
@@ -522,6 +562,88 @@ class _CommanderFullState extends State<CommanderFull> {
                                                 )
                                                 ),
                                         ),
+                                        
+      //mobile money
+      
+                              
+                                  servs.paiementMode == "Mobile Money"? 
+                                  Padding(
+                                      padding: const EdgeInsets.only(left: 16,top: 16),
+                                      child: Text("Service :",textAlign: TextAlign.start,
+                                        style: TextStyle(color: principalTextColor,fontSize: 15,
+                                        ),),
+                                    ): 
+                                    Container(width: 0,height: 0,),
+                                  servs.paiementMode == "Mobile Money"?  
+                                  Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
+                                      child:
+                                      TextFormField(
+                                        cursorColor: principalTextColor,
+                                        keyboardType: TextInputType.text,
+                                        controller: serviceController,
+                                        style:TextStyle(
+                                            color: principalTextColor,
+                                            fontWeight: FontWeight.bold
+                                        ),
+                                        decoration:textInputDecoration.copyWith(hintText: 'O/M'),
+                                        validator: (value) {
+                                          if (value.toUpperCase() != "O"  && value.toUpperCase() != "M" ) {
+                                            return "Entrez un service valide";
+                                            /*setState(() {
+                                              nomController.text = user.lastName;
+                                            }); */
+                                           }
+                                          return null;
+                                        },
+                                      ),
+                                    ):
+                                    Container(width: 0,height: 0,),
+                                    servs.paiementMode == " Mobile Money"? 
+                                  Padding(
+                                      padding: const EdgeInsets.only(left: 16),
+                                      child: Text("Phone :",textAlign: TextAlign.start,
+                                        style: TextStyle(color: principalTextColor,fontSize: 15,
+                                        ),),
+                                    ): 
+                                    Container(width: 0,height: 0,),
+                                  servs.paiementMode == "Mobile Money"?  
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 5.0, left: 16.0, right: 16.0, bottom: 8.0),
+                                      child:  InternationalPhoneNumberInput(
+                                        onInputChanged: (PhoneNumber number) {
+                                        },
+                                        onInputValidated: (bool value) {
+                                        },
+                                        selectorConfig: SelectorConfig(
+                                          selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                                        ),
+                                        ignoreBlank: true,
+                                        countrySelectorScrollControlled: false,
+                                        autoValidateMode: AutovalidateMode.disabled,
+                                        selectorTextStyle: TextStyle(color: principalTextColor,fontWeight: FontWeight.bold),
+                                        initialValue: number2,
+                                        cursorColor: principalTextColor,
+                                        textFieldController: buyphoneController,
+                                        textStyle: TextStyle(color: principalTextColor,fontWeight: FontWeight.bold),
+                                        formatInput: true,
+                                        countries: [initialCountry],
+                                        keyboardType:TextInputType.numberWithOptions(signed: true, decimal: true),
+                                        inputBorder: OutlineInputBorder(
+
+                                            borderSide: BorderSide(color: secondaryTextColor,width: 1),
+                                            borderRadius:BorderRadius.all(Radius.circular(10.0))),
+                                        inputDecoration: textInputDecoration.copyWith(hintText: '6*******5',),
+                                        onSaved: (PhoneNumber number) {
+                                         buyphoneController.text = number.toString().split("+")[1] ;
+                                        },
+                                      ),
+                                    )
+                                  
+                                   
+                                :  Container(width: 0,height: 0,),
+
                                     
 
     ];
@@ -532,6 +654,7 @@ class _CommanderFullState extends State<CommanderFull> {
     Company company = serv.company;
    double width = 70;
   double heigth = 40;
+  final double radius = 10;
     List<Widget> l = [];
       if (company.datas.payments.cash != null) {
           Widget a =  GestureDetector(
@@ -546,7 +669,7 @@ class _CommanderFullState extends State<CommanderFull> {
                       image: AssetImage("assets/cash"+".jpg"),
                       fit: BoxFit.cover,
                     ),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)
+                    borderRadius: BorderRadius.all(Radius.circular(radius)
                     ),
                   ))
           ) ;
@@ -568,7 +691,7 @@ class _CommanderFullState extends State<CommanderFull> {
                       image: AssetImage("assets/mobilemoney"+".jpg"),
                       fit: BoxFit.cover,
                     ),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)
+                    borderRadius: BorderRadius.all(Radius.circular(radius)
                     ),
                   )),
           ) ;
@@ -589,7 +712,7 @@ class _CommanderFullState extends State<CommanderFull> {
                       image: AssetImage("assets/paypal"+".jpg"),
                       fit: BoxFit.cover,
                     ),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)
+                    borderRadius: BorderRadius.all(Radius.circular(radius)
                     ),
                   ))
           ) ;
@@ -610,7 +733,7 @@ class _CommanderFullState extends State<CommanderFull> {
                       image: AssetImage("assets/card"+".jpg"),
                       fit: BoxFit.cover,
                     ),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)
+                    borderRadius: BorderRadius.all(Radius.circular(radius)
                     ),
                   ))
           ) ;

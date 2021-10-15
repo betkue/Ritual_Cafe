@@ -9,6 +9,7 @@ import 'package:ritual_cafe/models/json/errorconnexion.dart';
 import 'package:ritual_cafe/models/json/errorlogin.dart';
 import 'package:ritual_cafe/models/json/jsonlistecommande.dart';
 import 'package:ritual_cafe/models/json/jsonuser.dart';
+import 'package:ritual_cafe/models/json/reponsepostcommande.dart';
 import 'package:ritual_cafe/models/json/responseUpdateUser.dart';
 import 'package:ritual_cafe/models/response.dart';
 import 'package:ritual_cafe/models/user.dart';
@@ -23,9 +24,11 @@ class Services with ChangeNotifier {
     _commandes = await DataBase.instance.commandes();
     for (var i = 0; i < _commandes.length; i++) {
       _total =   _total + _commandes[i].prixTotal;
-      
+      _total2 = _total;
     }
   }
+  String _commandeId = "";
+  get commandeid =>_commandeId;
   //final  url = Uri.http('192.168.43.253','freeing/index.php');
   Services(this.user){genererCommande();}
 
@@ -136,8 +139,13 @@ class Services with ChangeNotifier {
   get total => _total;
   set total(int a) {
     _total = a;
+    _total2 = a;
     notifyListeners();
   }
+    //Total2
+  int _total2 = 0;
+
+  get total2 => _total2;
 
 
 //Commandes
@@ -442,18 +450,19 @@ class Services with ChangeNotifier {
       switch (response.statusCode) {
         case 201:
           final String responsestring = response.body;
-          ResponseUpdateUser result = jsonResponseUpdeteFromJson(responsestring);
-          _registerUser = result;
+          ReponsePostCommande result = ReponsePostCommandeFromJson(responsestring);
+          
           for (var i = 0; i < _commandes.length; i++) {
             
              DataBase.instance.deleteCommande(CommandeToJson(_commandes[i]));
           }
           _commandes= [];
           _total = 0;
+          _commandeId = result.id.toString();
           notifyListeners();
 
 
-          return response.body;
+          return _commandeId;
           break;
         case 403:
           return "";
@@ -492,6 +501,46 @@ class Services with ChangeNotifier {
           break;
         default:
           return JsonListeCommandes();
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+    Future<ResponseSend> buyMobile(String number, String service) async {
+    //List<UserBdd> users = await DataBase.instance.user();
+    try {
+      http.Response response = await http.post(
+        Uri.parse(
+           "https://dashboard.genuka.com/api/2021-05/payments/mobilemoney/charge"),
+        headers: {
+          "Authorization": "Bearer " + this.user.code,
+          "Accept": "application/json"
+          //"Content-type": "application/json"
+        },
+        body: {
+          "phoneService":service,
+          "amount":_total2.toString(),
+          "phone":number,
+          "command_id":_commandeId,
+          "fees":true.toString()
+        }
+      );
+          ResponseSend result = ResponseSendFromJson(response.body);
+      switch (response.statusCode) {
+        case 200:
+          //final String responsestring = response.body;
+          _total2 = 0;
+          notifyListeners();
+          return ResponseSend(true,result.message);
+          break;
+        case 403:
+          return ResponseSend(false,result.message);
+        case 400:
+          return ResponseSend(false,result.message);
+          break;
+        default:
+          return ResponseSend(false,result.message);
       }
     } catch (e) {
       print(e);
