@@ -1,16 +1,18 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:convert';
+
+import 'package:ritual_cafe/models/json/jsonlistecommande.dart';
 Company jsonCompanyFromJson(String str) => Company.fromJson(json.decode(str));
 String jsonCompanyToJson(Company data) => json.encode(data.toJson());
 class Company {
 	int id;
 	String nom;
-	Null logo;
+	String logo;
 	String contact;
 	String tel;
-	Null slogan;
-	Null website;
+	String slogan;
+	String website;
 	String slugExpress;
 	int etat;
 	String email;
@@ -22,27 +24,28 @@ class Company {
 	String viewId;
 	Devise devise;
 	String tarifLivraison;
-	Datas datas;
-	Null villeId;
+	Datas2 datas;
+	String villeId;
 	String name;
-	List<Null> reviews;
-	List<Null> discounts;
-	List<Null> medias;
+	int lowestPrice;
+	List<Map> reviews;
+	List<Map> discounts;
+	List<Map> medias;
 
-	Company({this.id, this.nom, this.logo, this.contact, this.tel, this.slogan, this.website, this.slugExpress, this.etat, this.email, this.delaiLivraison, this.categorieEntrepriseId, this.description, this.createdAt, this.updatedAt, this.viewId, this.devise, this.tarifLivraison, this.datas, this.villeId, this.name, this.reviews, this.discounts, this.medias});
+	Company({this.id, this.nom, this.logo, this.contact, this.tel, this.slogan, this.website, this.slugExpress, this.etat, this.email, this.delaiLivraison, this.categorieEntrepriseId, this.description, this.createdAt, this.updatedAt, this.viewId, this.devise, this.tarifLivraison, this.datas, this.villeId, this.name, this.lowestPrice, this.reviews, this.discounts, this.medias});
 
 	Company.fromJson(Map<String, dynamic> json) {
 		id = json['id'];
 		nom = json['nom'];
-		logo = json['logo'];
+		logo = json['logo'] != null?json['logo']:"";
 		contact = json['contact'];
 		tel = json['tel'];
-		slogan = json['slogan'];
-		website = json['website'];
+		slogan = json['slogan'] != null?json['slogan']:"";
+		website = json['website'] != null?json['website']:"";
 		slugExpress = json['slug_express'];
 		etat = json['etat'];
 		email = json['email'];
-		delaiLivraison = json['delai_livraison'];
+		delaiLivraison = null;//json['delai_livraison'];
 		categorieEntrepriseId = json['categorie_entreprise_id'];
 		description = json['description'];
 		createdAt = json['created_at'];
@@ -50,20 +53,21 @@ class Company {
 		viewId = json['view_id'];
 		devise = json['devise'] != null ? new Devise.fromJson(json['devise']) : null;
 		tarifLivraison = json['tarif_livraison'];
-		datas = json['datas'] != null ? new Datas.fromJson(json['datas']) : null;
-		villeId = json['ville_id'];
+		datas = json['datas'] != null ? new Datas2.fromJson(json['datas']) : null;
+		villeId = json['ville_id']!= null  ?json['ville_id'].toString():json['ville_id'].toString();
 		name = json['name'];
+		lowestPrice = json['lowest_price'];
 		if (json['reviews'] != null) {
-			reviews = <Null> [];
-			json['reviews'].forEach((v) { reviews.add(null.toString()); });
+			reviews = <Map>[];
+			json['reviews'].forEach((v) { reviews.add(new Map()); });
 		}
 		if (json['discounts'] != null) {
-			discounts = <Null> [];
-			json['discounts'].forEach((v) { discounts.add(null.toString()); });
+			discounts =<Map>[];
+			json['discounts'].forEach((v) { discounts.add(new Map()); });
 		}
 		if (json['medias'] != null) {
-			medias =  <Null> [];
-			json['medias'].forEach((v) { medias.add(null.toString()); });
+			medias =   <Map>[];
+			json['medias'].forEach((v) { medias.add(new Map()); });
 		}
 	}
 
@@ -94,14 +98,15 @@ class Company {
     }
 		data['ville_id'] = this.villeId;
 		data['name'] = this.name;
+		data['lowest_price'] = this.lowestPrice;
 		if (this.reviews != null) {
-      data['reviews'] = this.reviews.map((v) => 'null');
+      data['reviews'] = this.reviews.map((v) => v).toList();
     }
 		if (this.discounts != null) {
-      data['discounts'] = this.discounts.map((v) => 'null');
+      data['discounts'] = this.discounts.map((v) => v).toList();
     }
 		if (this.medias != null) {
-      data['medias'] = this.medias.map((v) => 'null');
+      data['medias'] = this.medias.map((v) => v).toList();
     }
 		return data;
 	}
@@ -124,7 +129,7 @@ class Devise {
 		code = json['code'];
 		symbol = json['symbol'];
 		datas = json['datas'] != null ? new Datas.fromJson(json['datas']) : null;
-		createdAt = json['created_at'];
+		createdAt = null;//json['created_at'];
 		updatedAt = json['updated_at'];
 	}
 
@@ -143,12 +148,12 @@ class Devise {
 	}
 }
 
-class Data {
+class Datas {
 	String state;
 
-	Data({this.state});
+	Datas({this.state});
 
-	Data.fromJson(Map<String, dynamic> json) {
+	Datas.fromJson(Map<String, dynamic> json) {
 		state = json['state'];
 	}
 
@@ -159,20 +164,166 @@ class Data {
 	}
 }
 
-class Datas {
+class Datas2 {
+	Payments payments;
+	Accounting accounting;
 	Registration registration;
 
-	Datas({this.registration});
+	Datas2({this.payments, this.accounting, this.registration});
 
-	Datas.fromJson(Map<String, dynamic> json) {
+	Datas2.fromJson(Map<String, dynamic> json) {
+		payments = json['payments'] != null ? new Payments.fromJson(json['payments']) : null;
+		accounting = json['accounting'] != null ? new Accounting.fromJson(json['accounting']) : null;
 		registration = json['registration'] != null ? new Registration.fromJson(json['registration']) : null;
 	}
 
 	Map<String, dynamic> toJson() {
 		final Map<String, dynamic> data = new Map<String, dynamic>();
+		if (this.payments != null) {
+      data['payments'] = this.payments.toJson();
+    }
+		if (this.accounting != null) {
+      data['accounting'] = this.accounting.toJson();
+    }
 		if (this.registration != null) {
       data['registration'] = this.registration.toJson();
     }
+		return data;
+	}
+}
+
+class Payments {
+	Cash cash;
+	Paypal paypal;
+	Mobilemoney mobilemoney;
+  Card card;
+
+	Payments({this.cash, this.paypal, this.mobilemoney,this.card});
+
+	Payments.fromJson(Map<String, dynamic> json) {
+		cash = json['cash'] != null ? new Cash.fromJson(json['cash']) : null;
+		paypal = json['paypal'] != null ? new Paypal.fromJson(json['paypal']) : null;
+		mobilemoney = json['mobilemoney'] != null ? new Mobilemoney.fromJson(json['mobilemoney']) : null;
+		card = json['card'] != null ? new Card.fromJson(json['card']) : null;
+	}
+
+	Map<String, dynamic> toJson() {
+		final Map<String, dynamic> data = new Map<String, dynamic>();
+		if (this.cash != null) {
+      data['cash'] = this.cash.toJson();
+    }
+		if (this.paypal != null) {
+      data['paypal'] = this.paypal.toJson();
+    }
+		if (this.mobilemoney != null) {
+      data['mobilemoney'] = this.mobilemoney.toJson();
+    }
+		if (this.card != null) {
+      data['card'] = this.card.toJson();
+    }
+		return data;
+	}
+}
+
+class Cash {
+	bool accept;
+	String fullName;
+
+	Cash({this.accept, this.fullName});
+
+	Cash.fromJson(Map<String, dynamic> json) {
+		accept = json['accept'];
+		fullName = json['full_name'];
+	}
+
+	Map<String, dynamic> toJson() {
+		final Map<String, dynamic> data = new Map<String, dynamic>();
+		data['accept'] = this.accept;
+		data['full_name'] = this.fullName;
+		return data;
+	}
+}
+class Card {
+	bool accept;
+	String fullName;
+
+	Card({this.accept, this.fullName});
+
+	Card.fromJson(Map<String, dynamic> json) {
+		accept = json['accept'];
+		fullName = json['full_name'];
+	}
+
+	Map<String, dynamic> toJson() {
+		final Map<String, dynamic> data = new Map<String, dynamic>();
+		data['accept'] = this.accept;
+		data['full_name'] = this.fullName;
+		return data;
+	}
+}
+
+class Paypal {
+	String link;
+	bool accept;
+	String fullName;
+
+	Paypal({this.link, this.accept, this.fullName});
+
+	Paypal.fromJson(Map<String, dynamic> json) {
+		link = json['link'];
+		accept = json['accept'];
+		fullName = json['full_name'];
+	}
+
+	Map<String, dynamic> toJson() {
+		final Map<String, dynamic> data = new Map<String, dynamic>();
+		data['link'] = this.link;
+		data['accept'] = this.accept;
+		data['full_name'] = this.fullName;
+		return data;
+	}
+}
+
+class Mobilemoney {
+	String phone;
+	bool accept;
+	String fullName;
+
+	Mobilemoney({this.phone, this.accept, this.fullName});
+
+	Mobilemoney.fromJson(Map<String, dynamic> json) {
+		phone = json['phone'];
+		accept = json['accept'];
+		fullName = json['full_name'];
+	}
+
+	Map<String, dynamic> toJson() {
+		final Map<String, dynamic> data = new Map<String, dynamic>();
+		data['phone'] = this.phone;
+		data['accept'] = this.accept;
+		data['full_name'] = this.fullName;
+		return data;
+	}
+}
+
+class Accounting {
+	int removed;
+	int remained;
+	int generated;
+
+	Accounting({this.removed, this.remained, this.generated});
+
+	Accounting.fromJson(Map<String, dynamic> json) {
+		removed = json['removed'];
+		remained = json['remained'];
+		generated = json['generated'];
+	}
+
+	Map<String, dynamic> toJson() {
+		final Map<String, dynamic> data = new Map<String, dynamic>();
+		data['removed'] = this.removed;
+		data['remained'] = this.remained;
+		data['generated'] = this.generated;
 		return data;
 	}
 }
@@ -186,9 +337,7 @@ class Registration {
 	String sToken;
 	Null step2;
 	Null step3;
-	Null submit;
 	String currency;
-	String password;
 	Previous pPrevious;
 	String lastName;
 	String lastStep;
@@ -199,7 +348,7 @@ class Registration {
 	String tarifLivraison;
 	String companyCategory;
 
-	Registration({this.tel, this.name, this.email, this.steps, this.fFlash, this.sToken, this.step2, this.step3, this.submit, this.currency, this.password, this.pPrevious, this.lastName, this.lastStep, this.firstName, this.description, this.alreadySell, this.companySize, this.tarifLivraison, this.companyCategory});
+	Registration({this.tel, this.name, this.email, this.steps, this.fFlash, this.sToken, this.step2, this.step3, this.currency, this.pPrevious, this.lastName, this.lastStep, this.firstName, this.description, this.alreadySell, this.companySize, this.tarifLivraison, this.companyCategory});
 
 	Registration.fromJson(Map<String, dynamic> json) {
 		tel = json['tel'];
@@ -208,11 +357,9 @@ class Registration {
 		steps = json['steps'];
 		fFlash = json['_flash'] != null ? new Flash.fromJson(json['_flash']) : null;
 		sToken = json['_token'];
-		step2 = json['step_2'];
-		step3 = json['step_3'];
-		submit = json['submit'];
+		step2 = null;//json['step_2'];
+		step3 = null;//json['step_3'];
 		currency = json['currency'];
-		password = json['password'];
 		pPrevious = json['_previous'] != null ? new Previous.fromJson(json['_previous']) : null;
 		lastName = json['last_name'];
 		lastStep = json['last_step'];
@@ -236,9 +383,7 @@ class Registration {
 		data['_token'] = this.sToken;
 		data['step_2'] = this.step2;
 		data['step_3'] = this.step3;
-		data['submit'] = this.submit;
 		data['currency'] = this.currency;
-		data['password'] = this.password;
 		if (this.pPrevious != null) {
       data['_previous'] = this.pPrevious.toJson();
     }
@@ -255,30 +400,29 @@ class Registration {
 }
 
 class Flash {
-  
-	List<Null> news;
-	List<Null> old;
+	List<Map> news;
+	List<Map> old;
 
 	Flash({this.news, this.old});
 
 	Flash.fromJson(Map<String, dynamic> json) {
 		if (json['new'] != null) {
-			news = <Null>[];
-			json['new'].forEach((v) { news.add(null.toString()); });
+			news = <Map>[];
+			json['new'].forEach((v) { news.add(new Map()); });
 		}
 		if (json['old'] != null) {
-			old =  <Null>[];
-			json['old'].forEach((v) { old.add(null.toString()); });
+			old = <Map>[];
+			json['old'].forEach((v) { old.add(new Map()); });
 		}
 	}
 
 	Map<String, dynamic> toJson() {
 		final Map<String, dynamic> data = new Map<String, dynamic>();
 		if (this.news != null) {
-      data['new'] = this.news.map((v) => 'null').toList();
+      data['new'] = this.news.map((v) => v).toList();
     }
 		if (this.old != null) {
-      data['old'] = this.old.map((v) =>'null').toList();
+      data['old'] = this.old.map((v) => v).toList();
     }
 		return data;
 	}

@@ -91,7 +91,7 @@ class _UpdateProduitFullState extends State<UpdateProduitFull> {
                   else{
                    value = value +comma+ variante.options[y].name ;
                   }
-                 // choisi =true;
+                  choisi =true;
                 }
                 else{
                   
@@ -99,7 +99,7 @@ class _UpdateProduitFullState extends State<UpdateProduitFull> {
                 }
               }
               complement = complement + variante.name + " : " + value + ";" + "\n" ;
-        v.add(new VarrianteValue(variante.name,options,value, choisi,nbr));
+        v.add(new VarrianteValue(variante.name, choisi,value,nbr,options));
          
         
     }

@@ -25,10 +25,10 @@ class DataBase {
         db.execute(
           "CREATE TABLE  user(code TEXT)",
          
-        ).then((value) => db.execute( "CREATE TABLE  commande(id TEXT)",));
+        ).then((value) => db.execute( "CREATE TABLE  commande(code TEXT)",));
       },
 
-      version: 1,
+      version: 2,
     );
   }
   //insertion de l'utilisateur
@@ -57,7 +57,7 @@ class DataBase {
     //suppression de la commende
   void deleteCommande(String title) async {
     final Database db = await database;
-    db.delete("commande", where: "commande = ?", whereArgs: [title]);
+    db.delete("commande", where: "code = ?", whereArgs: [title]);
   }
   //modification de l'utilisateur
   void updateUser(UserBdd user,String nom) async {
@@ -70,7 +70,7 @@ class DataBase {
   void updateCommande(UserBdd commande,String nom) async {
     final Database db = await database;
     await db.update("commande", commande.toMap(),
-        where: "commande = ?", whereArgs: [nom]);
+        where: "code = ?", whereArgs: [nom]);
         
   }
 
@@ -96,20 +96,16 @@ class DataBase {
 
     // get Commande
 
-  Future<List<UserBdd>> commandes() async {
+  Future<List<Commande>> commandes() async {
+    List<Commande> commandes =[];
     final Database db = await database;
     final List<Map<String, dynamic>> maps = await db.query('commande');
     List<UserBdd> users = List.generate(maps.length, (i) {
       return UserBdd.fromMap(maps[i]);
     });
-    List<UserBdd> defaultUser = [UserBdd("NULL")];
-    if (users.isEmpty) {
-      for (UserBdd commande in defaultUser) {
-        insertCommande(commande);
-      }
-      users = defaultUser;
+    for (var i = 0; i < users.length; i++) {
+      commandes.add(CommandeFromJson(users[i].code));
     }
-
-    return users;
+    return commandes;
   }
 }

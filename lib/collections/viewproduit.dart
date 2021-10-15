@@ -95,12 +95,23 @@ class _ViewProduitFullState extends State<ViewProduitFull> {
                 }
               }
               complement = variante.name + " : " + value + ";" + "\n" ;
-        v.add(new VarrianteValue(variante.name,options,value, choisi,nbr));
+        v.add(new VarrianteValue(variante.name, choisi,value,nbr,options));
         
     }
-    Commande commande = new Commande(produit.id, servs.indexCollection,
-    servs.indexProduit, produit.tags[0].name,produit.name, produit.medias[0].link,
-     nombre, price,priceadd,prix ,v,complement,DateTime.now().toString(),note,
+    Commande commande = new 
+    Commande(produit.id,
+     servs.indexCollection,
+    servs.indexProduit, 
+    produit.tags[0].name,
+    produit.name, produit.medias[0].link,
+
+     nombre,
+      price,priceadd,
+      prix ,
+      v,
+      complement,
+      DateTime.now().toString(),
+      note,
      servs.commande.length
      );
     

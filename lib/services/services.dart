@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -20,8 +19,15 @@ import 'package:ritual_cafe/bdd/bdd.dart';
 
 class Services with ChangeNotifier {
   UserBdd user;
+  void genererCommande()async{
+    _commandes = await DataBase.instance.commandes();
+    for (var i = 0; i < _commandes.length; i++) {
+      _total =   _total + _commandes[i].prixTotal;
+      
+    }
+  }
   //final  url = Uri.http('192.168.43.253','freeing/index.php');
-  Services(this.user);
+  Services(this.user){genererCommande();}
 
   void _searchUser(UserBdd use) async {
     DataBase.instance.updateUser(use, user.code);
@@ -32,7 +38,12 @@ class Services with ChangeNotifier {
     _listeCommandes = a;
     notifyListeners();
   }
-
+  String _paiementMode ="Cash";
+  get paiementMode =>_paiementMode;
+  set paiementMode(String a){
+    _paiementMode=a;
+    notifyListeners();
+  }
   String _companyId = "430";
   get companyId => _companyId;
   //user register
@@ -45,7 +56,7 @@ class Services with ChangeNotifier {
 
   //company
   Company _company = Company(); //user initial
-  get company => _registerUser;
+  get company => _company;
   set company(Company a) {
     _company = a;
     notifyListeners();
@@ -128,24 +139,28 @@ class Services with ChangeNotifier {
     notifyListeners();
   }
 
-//Commandes
-  List<Commande> _commandes = [];
 
+//Commandes
+  List<Commande> _commandes ;
   get commande => _commandes;
   set commande(Commande a) {
+    DataBase.instance.insertCommande(UserBdd(CommandeToJson(a)));
     _commandes.add(a);
-    notifyListeners();
+    
+    //notifyListeners();
   }
 
   //delete commande
   deleteCommande(int i) {
     _total = _total - _commandes[i].prixTotal;
+    DataBase.instance.deleteCommande(CommandeToJson(_commandes[i]));
     _commandes.removeAt(i);
     notifyListeners();
   }
 
   //update
   updateCommande(int i, Commande a) {
+    DataBase.instance.updateCommande(UserBdd(CommandeToJson(a)), CommandeToJson(_commandes[i]));
     _commandes[i] = a;
     notifyListeners();
   }
@@ -160,6 +175,7 @@ class Services with ChangeNotifier {
         "password": pass,
         "company_id": _companyId
       });
+      print(response.statusCode);
       switch (response.statusCode) {
         case 200:
           final String responsestring = response.body;
@@ -178,8 +194,9 @@ class Services with ChangeNotifier {
           return ResponseSend(false, 'Error connexion');
       }
     } catch (e) {
+
       print(e);
-      return null;
+      return ResponseSend(false, 'Error connexion');
     }
   }
 
@@ -359,7 +376,7 @@ class Services with ChangeNotifier {
           "Accept": "application/json"
         },
       );
-
+        print(response.statusCode);
       switch (response.statusCode) {
         case 200:
           final String responsestring = response.body;
@@ -401,7 +418,7 @@ class Services with ChangeNotifier {
         "address": adresse,
         "mode": "home delivery"
       },
-      "payment": {"mode": "cash", "state": 0},
+      "payment": {"mode": _paiementMode, "state": 0},
       "note": note,
       "source": "Mobile App",
       "produits": _commandes.map((Commande produit) {
@@ -427,6 +444,10 @@ class Services with ChangeNotifier {
           final String responsestring = response.body;
           ResponseUpdateUser result = jsonResponseUpdeteFromJson(responsestring);
           _registerUser = result;
+          for (var i = 0; i < _commandes.length; i++) {
+            
+             DataBase.instance.deleteCommande(CommandeToJson(_commandes[i]));
+          }
           _commandes= [];
           _total = 0;
           notifyListeners();

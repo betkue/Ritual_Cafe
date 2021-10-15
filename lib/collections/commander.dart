@@ -5,15 +5,12 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:ritual_cafe/collections/colors.dart';
 import 'package:ritual_cafe/loadding.dart';
-import 'package:ritual_cafe/models/commande.dart';
 import 'package:ritual_cafe/models/json/company.dart';
-import 'package:ritual_cafe/models/json/jsonuser.dart';
 import 'package:ritual_cafe/models/json/responseUpdateUser.dart';
 import 'package:ritual_cafe/services/services.dart';
 import 'package:ritual_cafe/clients/auth/decoration.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
-import 'package:ritual_cafe/clients/auth/decoration.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 class Commander extends StatelessWidget {
   
@@ -216,27 +213,56 @@ class _CommanderFullState extends State<CommanderFull> {
                                formKey.currentState.save();
                                   setState(() {
                               send = true;
-                            });
+                            }); 
+                            
                             String result = await servs.commander(nomController.text,
                              prenomController.text, mailController.text, phoneController.text, adresseController.text, 
                              noteController.text);
                             if (result.isNotEmpty) {
                               
                               snack("Commandé", 100);
-                            setState(() {
-                              send = false;
-                            });
                               
-                                              
-                          Navigator.of(context).pushNamedAndRemoveUntil('/home',
-                          (Route<dynamic> route) => false,arguments: widget.serv);
+                                setState(() {
+                                  send = false;
+                                });
+                                switch (servs.paiementMode) {
+                                case "Cash": Navigator.of(context).pushNamedAndRemoveUntil('/home',
+                                  (Route<dynamic> route) => false,arguments: widget.serv);
+                                  break;
+                                case "Paypal":  
+                                
+                                    String url =servs.company.datas.payments.paypal.link;
+                                if (await canLaunch(url)) {
+                                    await launch(
+                                      url,
+                                      forceSafariVC: true,
+                                      forceWebView: true,
+                                      enableJavaScript: true,
+                                      enableDomStorage: true,
+                                      headers: <String, String>{'my_header_key': 'my_header_value'},
+                                    );
+                                  } else {
+                                    throw 'Could not launch $url';
+                                  }
+                                  break;
+                                case "Mobile Money":
+                                  break;
+                                case "Credit Card":
+                                  break;
+                                default: Navigator.of(context).pushNamedAndRemoveUntil('/home',
+                                  (Route<dynamic> route) => false,arguments: widget.serv);
+                              }
+                              
                             } else {
-                              snack("Connexion Impossible",100);
+                              snack("Echec Connexion",100);
+                              Navigator.of(context).pushNamedAndRemoveUntil('/home',
+                                  (Route<dynamic> route) => false,arguments: widget.serv);
                               
                             setState(() {
                               send = false;
                             });
                             }
+                            
                             
                               
                             }
@@ -471,8 +497,129 @@ class _CommanderFullState extends State<CommanderFull> {
                                         },
                                       ),
                                     ),
+                                  Row(
+                                    children: [
+                                      Padding(
+                                          padding: const EdgeInsets.only(left: 16,bottom: 10),
+                                          child: Text("Payement : ",textAlign: TextAlign.start,
+                                            style: TextStyle(color: principalTextColor,fontSize: 15,
+                                            ),),
+                                        ), 
+                                      Padding(
+                                          padding: const EdgeInsets.only(left: 16,bottom: 10),
+                                          child: Text(servs.paiementMode,textAlign: TextAlign.start,
+                                            style: TextStyle(color: primaryColor,fontSize: 15,fontStyle: FontStyle.italic
+                                            ),),
+                                        ),
+                                    ],
+                                  ), 
+                                  Padding(
+                                          padding: const EdgeInsets.only(left: 16),
+                                          child: SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                                child:  Row(
+                                                  children: createmode(servs),
+                                                )
+                                                ),
+                                        ),
+                                    
 
     ];
+    return l;
+  }
+
+  List<Widget>createmode(Services serv){
+    Company company = serv.company;
+   double width = 70;
+  double heigth = 40;
+    List<Widget> l = [];
+      if (company.datas.payments.cash != null) {
+          Widget a =  GestureDetector(
+            onTap: (){
+              serv.paiementMode =company.datas.payments.cash.fullName;
+            },
+            child: Container(
+                  height:heigth,
+                  width: width,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/cash"+".jpg"),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)
+                    ),
+                  ))
+          ) ;
+
+          l.add(a);
+          l.add(SizedBox(width: 10,));
+        
+      }
+       if (company.datas.payments.mobilemoney != null) {
+         Widget a =  GestureDetector(
+            onTap: (){
+              serv.paiementMode =company.datas.payments.mobilemoney.fullName;
+            },
+            child: Container(
+                  height:heigth,
+                  width: width,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/mobilemoney"+".jpg"),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)
+                    ),
+                  )),
+          ) ;
+
+         l.add(a);
+          l.add(SizedBox(width: 10,));
+      }
+       if (company.datas.payments.paypal != null) {
+         Widget a =  GestureDetector(
+            onTap: (){
+              serv.paiementMode =company.datas.payments.paypal.fullName;
+            },
+            child: Container(
+                  height:heigth,
+                  width: width,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/paypal"+".jpg"),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)
+                    ),
+                  ))
+          ) ;
+
+         l.add(a);
+          l.add(SizedBox(width: 10,));
+      }
+       if (company.datas.payments.card != null) {
+         Widget a =  GestureDetector(
+            onTap: (){
+              serv.paiementMode =company.datas.payments.card.fullName;
+            },
+            child: Container(
+                  height:heigth,
+                  width: width,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/card"+".jpg"),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)
+                    ),
+                  ))
+          ) ;
+
+          l.add(a);
+         // l.add(SizedBox(width: 5,));
+      }
+      
+    
     return l;
   }
 
