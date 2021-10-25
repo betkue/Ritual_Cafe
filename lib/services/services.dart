@@ -187,10 +187,10 @@ class Services with ChangeNotifier {
       switch (response.statusCode) {
         case 200:
           final String responsestring = response.body;
-          JsonUser result = jsonUserFromJson(responsestring);
+       //   JsonUser result = jsonUserFromJson(responsestring);
           //_registerUser = User(result.user.firstname,result.user.surname,result.user.email,result.user.email,result.user.tel);
 
-          _searchUser(UserBdd(result.accessToken));
+        //  _searchUser(UserBdd(result.accessToken));
           return ResponseSend(true, 'connected');
           break;
         case 403:

@@ -113,9 +113,9 @@ class _UpdateProduitFullState extends State<UpdateProduitFull> {
       );
     
     servs.total = servs.total - commande.prixTotal+ prix;
-    servs.updateCommande(servs.indexCommande,commandeUpdated );
+    servs.updateCommande(servs.indexCommande,commandeUpdated);
     
-    Navigator.of(context).pushNamedAndRemoveUntil('/pagner',(Route<dynamic> route) => false,arguments: widget.serv);
+   Navigator.of(context).pushNamedAndRemoveUntil('/pagner',(Route<dynamic> route) => false,arguments: widget.serv);
     
   }
   void valider(Services servs){

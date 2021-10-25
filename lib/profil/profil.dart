@@ -93,7 +93,7 @@ class _ProfilFullState extends State<ProfilFull> {
   final telController = TextEditingController();
   final sexeController = TextEditingController();
   final birthDateController = TextEditingController();
-  RegExp regExp =    new RegExp(r"^[a-zA-Z0-9._\-*ù^&éè#!§]+@[a-z0-9._-]+\.[a-z]{2,6}");//verification du mail
+  RegExp regExp =    new RegExp(r"^[a-zA-Z0-9._+\-*ù^&éè#!§]+@[a-z0-9._-]+\.[a-z]{2,6}");//verification du mail
   
   PhoneNumber number = PhoneNumber(isoCode: 'CM');
  bool edit = false;
