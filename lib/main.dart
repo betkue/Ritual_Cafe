@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:ritual_cafe/collections/commander.dart';
-import 'package:ritual_cafe/collections/home.dart';
-import 'package:ritual_cafe/collections/pagner.dart';
-import 'package:ritual_cafe/collections/updateProduit.dart';
-import 'package:ritual_cafe/collections/viewproduit.dart';
-import 'package:ritual_cafe/models/user.dart';
-import 'package:ritual_cafe/profil/updatephoto.dart';
-import 'package:ritual_cafe/services/services.dart';
-import 'package:ritual_cafe/setting/commandehistory.dart';
+import 'package:template1_genuka_mobile/collections/commander.dart';
+import 'package:template1_genuka_mobile/collections/home.dart';
+import 'package:template1_genuka_mobile/collections/pagner.dart';
+import 'package:template1_genuka_mobile/collections/updateProduit.dart';
+import 'package:template1_genuka_mobile/collections/viewproduit.dart';
+import 'package:template1_genuka_mobile/models/user.dart';
+import 'package:template1_genuka_mobile/profil/updatephoto.dart';
+import 'package:template1_genuka_mobile/services/services.dart';
+import 'package:template1_genuka_mobile/setting/commandehistory.dart';
 import 'bdd/bdd.dart';
 import 'clients/auth/auth.dart';
 import 'loadding.dart';
 
-import 'package:ritual_cafe/models/json/responseUpdateUser.dart';
+import 'package:template1_genuka_mobile/models/json/responseUpdateUser.dart';
 
 void main() {
   runApp(MyApp());

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ritual_cafe/clients/auth/decoration.dart';
-import 'package:ritual_cafe/collections/colors.dart';
-import 'package:ritual_cafe/models/json/jsonlistecommande.dart';
-import 'package:ritual_cafe/services/services.dart';
+import 'package:template1_genuka_mobile/clients/auth/decoration.dart';
+import 'package:template1_genuka_mobile/collections/colors.dart';
+import 'package:template1_genuka_mobile/models/json/jsonlistecommande.dart';
+import 'package:template1_genuka_mobile/services/services.dart';
 import 'package:provider/provider.dart';
 
 class CommandeHistory extends StatelessWidget {

@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ritual_cafe/collections/colors.dart';
-import 'package:ritual_cafe/models/commande.dart';
-import 'package:ritual_cafe/models/json/collectionjson.dart';
-import 'package:ritual_cafe/models/optionParameter.dart';
-import 'package:ritual_cafe/services/services.dart';
+import 'package:template1_genuka_mobile/collections/colors.dart';
+import 'package:template1_genuka_mobile/models/commande.dart';
+import 'package:template1_genuka_mobile/models/json/collectionjson.dart';
+import 'package:template1_genuka_mobile/models/optionParameter.dart';
+import 'package:template1_genuka_mobile/services/services.dart';
 import 'ExpandedListAnimationWidget.dart';
 import 'Scrollbar.dart';
 

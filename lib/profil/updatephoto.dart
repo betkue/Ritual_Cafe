@@ -1,13 +1,13 @@
 import 'dart:ui';
 
-import 'package:ritual_cafe/models/json/responseUpdateUser.dart';
+import 'package:template1_genuka_mobile/models/json/responseUpdateUser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:ritual_cafe/clients/auth/decoration.dart';
-import 'package:ritual_cafe/collections/colors.dart';
-import 'package:ritual_cafe/loadding.dart';
-import 'package:ritual_cafe/services/services.dart';
+import 'package:template1_genuka_mobile/clients/auth/decoration.dart';
+import 'package:template1_genuka_mobile/collections/colors.dart';
+import 'package:template1_genuka_mobile/loadding.dart';
+import 'package:template1_genuka_mobile/services/services.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';

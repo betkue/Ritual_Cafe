@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:ritual_cafe/models/commande.dart';
-import 'package:ritual_cafe/models/user.dart';
+import 'package:template1_genuka_mobile/models/commande.dart';
+import 'package:template1_genuka_mobile/models/user.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

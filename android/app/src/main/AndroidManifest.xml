@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.ritual_cafe">
+    package="com.example.template1_genuka_mobile">
    <application
         android:label="Ritual Café"
         android:usesCleartextTraffic="true"

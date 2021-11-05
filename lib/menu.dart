@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ritual_cafe/services/services.dart';
+import 'package:template1_genuka_mobile/services/services.dart';
 import 'package:provider/provider.dart';
 class Menu extends StatelessWidget {
   final Services serv;

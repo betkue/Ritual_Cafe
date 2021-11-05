@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:ritual_cafe/collections/colors.dart';
-import 'package:ritual_cafe/loadding.dart';
-import 'package:ritual_cafe/models/commande.dart';
-import 'package:ritual_cafe/models/json/company.dart';
-import 'package:ritual_cafe/services/services.dart';
-import 'package:ritual_cafe/clients/auth/decoration.dart';
+import 'package:template1_genuka_mobile/collections/colors.dart';
+import 'package:template1_genuka_mobile/loadding.dart';
+import 'package:template1_genuka_mobile/models/commande.dart';
+import 'package:template1_genuka_mobile/models/json/company.dart';
+import 'package:template1_genuka_mobile/services/services.dart';
+import 'package:template1_genuka_mobile/clients/auth/decoration.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 class Pagner extends StatelessWidget {
   Services serv;

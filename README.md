@@ -1,4 +1,4 @@
-# ritual_cafe
+# template1_genuka_mobile
 
 Ritual Cafe
 

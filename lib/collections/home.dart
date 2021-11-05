@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ritual_cafe/clients/auth/auth.dart';
-import 'package:ritual_cafe/collections/collections.dart';
-import 'package:ritual_cafe/collections/colors.dart';
-import 'package:ritual_cafe/collections/pagner.dart';
-import 'package:ritual_cafe/loadding.dart';
-import 'package:ritual_cafe/models/ResponseUser.dart';
-import 'package:ritual_cafe/profil/profil.dart';
-import 'package:ritual_cafe/services/services.dart';
+import 'package:template1_genuka_mobile/clients/auth/auth.dart';
+import 'package:template1_genuka_mobile/collections/collections.dart';
+import 'package:template1_genuka_mobile/collections/colors.dart';
+import 'package:template1_genuka_mobile/collections/pagner.dart';
+import 'package:template1_genuka_mobile/loadding.dart';
+import 'package:template1_genuka_mobile/models/ResponseUser.dart';
+import 'package:template1_genuka_mobile/profil/profil.dart';
+import 'package:template1_genuka_mobile/services/services.dart';
 import 'package:provider/provider.dart';
-import 'package:ritual_cafe/setting/setting.dart';
+import 'package:template1_genuka_mobile/setting/setting.dart';
 
 class Home extends StatelessWidget {
  final  Services serv;
